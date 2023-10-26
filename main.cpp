@@ -4,5 +4,6 @@ using namespace std;
 int main()
 {
     cout<<"hello word"<<endl;
+    /*gestion des entreprises*/
     return 0;
 }
