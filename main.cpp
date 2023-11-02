@@ -1,9 +1,26 @@
-#include<ioestram>
-#include<string>
-using namespace std;
-int main()
+#include "mainwindow.h"
+
+#include <QApplication>
+
+int main(int argc, char *argv[])
 {
-    cout<<"hello";
-    cout<<"......"<<endln;
-    return 0;
+    QApplication a(argc, argv);
+Inspection *intrr=new Inspection;
+    Connection c;
+    bool test=c.createconnect();
+    if(test)
+    {   intrr->show();
+        QMessageBox::critical(nullptr, QObject::tr("database is open"),
+                    QObject::tr("connection successful.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+}
+    else
+        QMessageBox::critical(nullptr, QObject::tr("database is not open"),
+                    QObject::tr("connection failed.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+
+
+    return a.exec();
 }
