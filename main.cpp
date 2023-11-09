@@ -10,15 +10,15 @@ Inspection *intrr=new Inspection;
     bool test=c.createconnect();
     if(test)
     {   intrr->show();
-        QMessageBox::critical(nullptr, QObject::tr("database is open"),
-                    QObject::tr("connection successful.\n"
-                                "Click Cancel to exit."), QMessageBox::Cancel);
+        QMessageBox::critical(nullptr, QObject::tr("Base de donner est : OUVERTE"),
+                    QObject::tr("Connexion Réussie.\n"
+                                "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
 
 }
     else
-        QMessageBox::critical(nullptr, QObject::tr("database is not open"),
-                    QObject::tr("connection failed.\n"
-                                "Click Cancel to exit."), QMessageBox::Cancel);
+        QMessageBox::critical(nullptr, QObject::tr("la base de données N'EST PAS OUVERTE"),
+                    QObject::tr("échec de la connexion.\n"
+                                "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
 
 
 
