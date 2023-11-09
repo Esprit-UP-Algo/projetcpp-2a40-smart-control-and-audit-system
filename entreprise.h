@@ -25,6 +25,10 @@ public:
     QSqlQueryModel *afficher();
     bool supprimer(int);
     bool modi(int);
+    bool modifier();
+    QSqlQueryModel* tri();
+    static Entreprise chercherParId(int id);
+    QString obtenirStatistiques();
  private:
     int id;
     QString nom;
