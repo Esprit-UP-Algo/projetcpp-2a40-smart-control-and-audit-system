@@ -1,5 +1,8 @@
 QT       += core gui
 QT       += core gui sql
+QT += core gui printsupport
+QT       += core charts
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -16,20 +19,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ajout.cpp \
     connexion.cpp \
     employe.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    ajout.h \
     connexion.h \
     employe.h \
     mainwindow.h
 
 FORMS += \
-    ajout.ui \
     mainwindow.ui
 
 # Default rules for deployment.
