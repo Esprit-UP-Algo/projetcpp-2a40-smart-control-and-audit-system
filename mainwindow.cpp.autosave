@@ -1,0 +1,226 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include<QObject>
+#include "certificat.h"
+#include <QIntValidator>
+#include "connection.h"
+#include<QMessageBox>
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+ui->le_id->setValidator(new QIntValidator(100, 9999, this));
+    ui->tab_certificat->setModel(C.afficher());
+    ui->le_id->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                           "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                           "display: flex;"
+                           "width: 484px;"
+                           "height: 60px;"
+                           "padding: 20px 16px;"
+                           "align-items: center;"
+                           "spacing: 24px;"
+                           "flex: 0;");
+    ui->le_id->setPlaceholderText("Entrez votre identifiant ");
+    ui->le_type->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                           "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                           "display: flex;"
+                           "width: 484px;"
+                           "height: 60px;"
+                           "padding: 20px 16px;"
+                           "align-items: center;"
+                           "spacing: 24px;"
+                           "flex: 0;");
+  ui->le_type->setPlaceholderText("Entrez le type de certificat ");
+    ui->le_date->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                           "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                           "display: flex;"
+                           "width: 484px;"
+                           "height: 60px;"
+                           "padding: 20px 16px;"
+                           "align-items: center;"
+                           "spacing: 24px;"
+                           "flex: 0;");
+
+    ui->le_supprimer->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                           "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                           "display: flex;"
+                           "width: 484px;"
+                           "height: 60px;"
+                           "padding: 20px 16px;"
+                           "align-items: center;"
+                           "spacing: 24px;"
+                           "flex: 0;");
+    ui->le_suppression->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                           "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                           "display: flex;"
+                           "width: 484px;"
+                           "height: 60px;"
+                           "padding: 20px 16px;"
+                           "align-items: center;"
+                           "spacing: 24px;"
+                           "flex: 0;");
+
+            ui->pb_ajouter_2->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                                   "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                                   "display: flex;"
+                                   "width: 484px;"
+                                   "height: 60px;"
+                                   "padding: 20px 16px;"
+                                   "align-items: center;"
+                                   "spacing: 24px;"
+                                   "flex: 0;");
+
+                    ui->pb_ajouter->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                                           "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                                           "display: flex;"
+                                           "width: 484px;"
+                                           "height: 60px;"
+                                           "padding: 20px 16px;"
+                                           "align-items: center;"
+                                           "spacing: 24px;"
+                                           "flex: 0;");
+                     ui->pb_ajouter->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                                                       "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                                                       "display: flex;"
+                                                       "width: 484px;"
+                                                       "height: 60px;"
+                                                       "padding: 20px 16px;"
+                                                       "align-items: center;"
+                                                       "spacing: 24px;"
+                                                       "flex: 0;");
+                     ui->le_supprimer->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                                                       "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                                                       "display: flex;"
+                                                       "width: 484px;"
+                                                       "height: 60px;"
+                                                       "padding: 20px 16px;"
+                                                       "align-items: center;"
+                                                       "spacing: 24px;"
+                                                       "flex: 0;");
+
+                     ui->le_suppression->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                                                       "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                                                       "display: flex;"
+                                                       "width: 484px;"
+                                                       "height: 60px;"
+                                                       "padding: 20px 16px;"
+                                                       "align-items: center;"
+                                                       "spacing: 24px;"
+                                                       "flex: 0;");
+                     ui->bt_ajouter->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+                                                       "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                                                       "display: flex;"
+                                                       "width: 484px;"
+                                                       "height: 60px;"
+                                                       "padding: 20px 16px;"
+                                                       "align-items: center;"
+                                                       "spacing: 24px;"
+                                                       "flex: 0;");
+
+                      ui->le_suppression->setStyleSheet("color: #FFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);");
+
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+
+void MainWindow::on_pb_ajouter_clicked()
+{
+   int id=ui->le_id->text().toInt();
+   QString type=ui->le_type->text();
+   QDate date=ui->le_date->date();
+    Certificat C(id ,type,date) ;
+    bool test=C.ajouter();
+
+    if (test)
+    {
+        QMessageBox::information(nullptr,QObject::tr("OK"),
+                                 QObject::tr("Ajouter effectue\n"
+                                              "Click cancel to exit."),QMessageBox ::Cancel);
+    }
+    else
+        QMessageBox::critical(nullptr,QObject::tr("Not Ok"),
+                              QObject::tr("Ajouter non effectue.\n"
+                                          "Click cancel to exit."),QMessageBox::Cancel);
+}
+
+
+
+void MainWindow::on_bt_ajouter_clicked()
+{
+
+    ui->groupBox->hide();
+   ui->groupBox_2->show();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->groupBox_2->hide();
+    ui->groupBox->show();
+   }
+
+void MainWindow::on_le_supprimer_clicked()
+{
+    QString idString = ui->le_suppression->text();
+        if (idString.isEmpty()) {
+            QMessageBox::warning(nullptr, QObject::tr("Invalid Input"), QObject::tr("Please enter an ID to delete."), QMessageBox::Ok);
+            return;
+        }
+
+        Certificat c1;
+        c1.setid(idString.toInt());
+
+        // Check for ID existence in the database
+        QString queryStr = "SELECT id FROM GESTION_CERTIFICAT WHERE id = :id";
+        QSqlQuery query;
+        query.prepare(queryStr);
+        query.bindValue(":id", c1.getid());
+        bool exists = query.exec() && query.next();
+
+        if (!exists) {
+            QMessageBox::warning(nullptr, QObject::tr("ID Not Found"), QObject::tr("The entered ID does not exist."), QMessageBox::Ok);
+            return;
+        }
+
+        bool test = c1.supprimer(c1.getid());
+
+        if (test)
+        {
+            QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("Suppression successful.\n""Click cancel to exit."), QMessageBox::Cancel);
+            ui->tab_certificat->setModel(C.afficher());
+        }
+        else
+        {
+            QMessageBox::critical(nullptr, QObject::tr("Not OK"), QObject::tr("Suppression failed.\n""Click cancel to exit."), QMessageBox::Cancel);
+
+}
+
+}
+
+void MainWindow::on_pb_ajouter_2_clicked()
+{
+    Certificat c;
+
+    c.setid(ui->le_id->text().toInt());
+    c.setdate(ui->le_date->date());
+    c.settype(ui->le_type->text());
+
+    bool test = c.modifier(c.getid());
+
+    if (test)
+    {
+        QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("modification successful.\n""Click cancel to exit."), QMessageBox::Cancel);
+        ui->tab_certificat->setModel(C.afficher());
+    }
+    else
+    {
+        QMessageBox::critical(nullptr, QObject::tr("Not OK"), QObject::tr("modification failed.\n""Click cancel to exit."), QMessageBox::Cancel);
+
+}
+
+}
