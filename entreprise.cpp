@@ -3,7 +3,12 @@
 #include<QSqlQuery>
 #include<QtDebug>
 #include<QObject>
-
+#include<QHeaderView>
+#include<QTabWidget>
+#include<QTableView>
+#include <QMessageBox>
+ #include <QtSql>
+#include <QtCharts>
 Entreprise::Entreprise()
 {
     id=0;
@@ -81,6 +86,10 @@ void Entreprise::setetat(QString etat)
 {
     this->etat=etat;
 }
+/*void Entreprise::setetat(const QString& etat)
+{
+    this->etat = etat;
+}*/
 bool Entreprise::ajouter()
 {
     QSqlQuery query;
@@ -94,6 +103,8 @@ bool Entreprise::ajouter()
     query.bindValue(":adress", adresse);
     query.bindValue(":recep", reception_de_la_demande);
     query.bindValue(":etati", etat);
+    /*ui->l_etate->addItem("Accréditée");
+    ui->l_etate->addItem("Non accréditée ");*/
     return query.exec();
 }
 bool Entreprise::supprimer(int id)
@@ -106,7 +117,7 @@ bool Entreprise::supprimer(int id)
 QSqlQueryModel *Entreprise::afficher()
 {
     QSqlQueryModel * model=new QSqlQueryModel();
-    model->setQuery("SELECT * FROM entreprise");
+    model->setQuery("SELECT id , nom , specialite , etat FROM entreprise");
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("specialité"));
@@ -127,3 +138,87 @@ bool Entreprise::modi(int nid)
             return query.exec();
 
 }
+bool Entreprise::modifier()
+{
+    QSqlQuery query;
+    query.prepare("UPDATE Entreprise SET nom=:nom, email=:email, specialite=:specialite,  adresse=:adresse, reception_de_la_demande=:reception, etat=:etat WHERE id=:id");
+            query.bindValue(":id",id);
+            query.bindValue(":nom",nom);
+            query.bindValue(":email",email);
+            query.bindValue(":specialite",specialite);
+            query.bindValue(":adresse",adresse);
+            query.bindValue(":reception",reception_de_la_demande);
+            query.bindValue(":etat",etat);
+            return query.exec();
+
+}
+QSqlQueryModel* Entreprise::tri()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT id ,nom,specialite,etat  FROM Entreprise order BY specialite ASC");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("specialité"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("etat"));
+
+
+    /*// Create a table view
+    QTableView* tableView = new QTableView;
+    tableView->setModel(model);
+
+    // Get the header view
+    QHeaderView* headerView = tableView->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
+    */
+
+    return model;
+}
+Entreprise Entreprise::chercherParId(int id)
+{
+    Entreprise entreprise;
+
+    QSqlQuery query;
+    query.prepare("SELECT id, nom, specialite, etat FROM entreprise WHERE id = :id");
+    query.bindValue(":id", id);
+
+    if (query.exec() && query.next()) {
+        entreprise.setid(query.value(0).toInt());
+        entreprise.setnom(query.value(1).toString());
+        entreprise.setspecialite(query.value(2).toString());
+        entreprise.setetat(query.value(3).toString());
+    }
+
+    return entreprise;
+}
+/*QString Entreprise::obtenirStatistiques()
+{
+    QString statistiques;
+
+    // Effectuer la requête SQL pour obtenir les statistiques
+    QString queryStr = "SELECT etat, COUNT(*) FROM Entreprise GROUP BY etat";
+    QSqlQuery query;
+    if (!query.exec(queryStr)) {
+        statistiques = "Erreur lors de l'exécution de la requête : " + query.lastError().text();
+    } else {
+        QPieSeries *series = new QPieSeries();
+
+        while (query.next()) {
+            QString etat = query.value(0).toString();
+            int count = query.value(1).toInt();
+            series->append(etat, count);
+        }
+
+        QChart *chart = new QChart();
+        chart->addSeries(series);
+        chart->setTitle("Statistiques des entreprises par état");
+
+        // Créer le widget de diagramme circulaire et l'afficher
+        QChartView *chartView = new QChartView(chart);
+        chartView->setRenderHint(QPainter::Antialiasing);
+
+        chartView->resize(400, 300); // Définir la taille du widget de diagramme circulaire
+        chartView->show();
+    }
+
+    return statistiques;
+}*/
