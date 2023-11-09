@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include "connexion.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -10,17 +11,18 @@ int main(int argc, char *argv[])
       bool test=c.createconnexion();
     MainWindow w;
 
-
+    QString css1="color: #FFF;"
+                "background-color: transparent";
 
 
         if(test)
         {w.show();
-            QMessageBox::critical(nullptr, QObject::tr("database is open"),
-                        QObject::tr("connection successful.\n"
-                                    "Click Cancel to exit."), QMessageBox::Cancel);
-            QMessageBox::critical(nullptr, QObject::tr("update "),
-                        QObject::tr("2 days left \n"
-                                    "leadership formation."), QMessageBox::Ok);
+
+
+            QMessageBox::information(nullptr, QObject::tr("database is open"),
+                        QObject::tr("connection successful. \n"
+                                    "Click Cancel to continue."), QMessageBox::Cancel);
+              return a.exec();
 
     }
         else
