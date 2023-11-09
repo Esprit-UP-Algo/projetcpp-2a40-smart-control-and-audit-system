@@ -27,8 +27,12 @@ public:
 
     bool ajouter();
    QSqlQueryModel* afficher();
+   QSqlQueryModel* tri();
 bool supprimer(int);
 bool idExists(int id);
+bool modifier(int IDFOR,QString formateur,QString type_de_formation,QString duree,QDate date_de_debut,QDate date_de_fin,int nb_place);
+
+
 private:
    int IDFOR ;
   QString TYPE_DE_FORMATION;
