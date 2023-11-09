@@ -29,8 +29,35 @@ private slots:
 
     void on_modi_clicked();
 
+    void on_trier_clicked();
+
+    void on_chercher_clicked();
+
+    void on_refresh_clicked();
+
+    void on_modifier_btn_clicked();
+
+    void on_retour_clicked();
+    void on_mid_currentIndexChanged(int);
+
+    void updateUI(int);
+int countEtat(const QString& );
+    void on_exportPDFBtn_clicked();
+
+    //void on_pushButton_2_clicked();
+   /* void afficherStatistiques();
+    void afficherStatistiques() const;*/
+
+void on_stat_clicked();
+
+void on_mod_enregistrer_clicked();
+
+void on_mod_annuler_clicked();
+
 private:
     Ui::MainWindow *ui;
     Entreprise e;
+    void remplirComboBoxIdEntreprise();
+
 };
 #endif // MAINWINDOW_H
