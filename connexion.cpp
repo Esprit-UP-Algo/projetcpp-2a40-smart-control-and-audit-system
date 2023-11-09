@@ -5,7 +5,7 @@
 #include <QDebug>
 #include "connexion.h"
 #include <QObject>
-#include "connexion.h"
+
 
 Connexion::Connexion()
 {
