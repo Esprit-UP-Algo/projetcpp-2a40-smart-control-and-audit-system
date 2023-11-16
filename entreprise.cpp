@@ -160,17 +160,6 @@ QSqlQueryModel* Entreprise::tri()
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("specialité"));
     model->setHeaderData(3, Qt::Horizontal, QObject::tr("etat"));
-
-
-    /*// Create a table view
-    QTableView* tableView = new QTableView;
-    tableView->setModel(model);
-
-    // Get the header view
-    QHeaderView* headerView = tableView->horizontalHeader();
-    headerView->setSectionResizeMode(QHeaderView::Stretch);
-    */
-
     return model;
 }
 Entreprise Entreprise::chercherParId(int id)
