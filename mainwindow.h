@@ -31,7 +31,7 @@ private slots:
 
     void on_trier_clicked();
 
-    void on_chercher_clicked();
+
 
     void on_refresh_clicked();
 
@@ -43,16 +43,34 @@ private slots:
     void updateUI(int);
 int countEtat(const QString& );
     void on_exportPDFBtn_clicked();
+void on_texte_recherche_textChanged(const QString &text);
 
     //void on_pushButton_2_clicked();
    /* void afficherStatistiques();
     void afficherStatistiques() const;*/
 
-void on_stat_clicked();
+//void on_stat_clicked();
+void on_stat();
 
 void on_mod_enregistrer_clicked();
 
 void on_mod_annuler_clicked();
+
+
+
+void on_pushButton_2_clicked();
+
+
+
+void on_retour_local_clicked();
+
+void on_email_clicked();
+
+void on_envoyer_clicked();
+
+void on_annuler_email_clicked();
+
+void on_localisation_btn_clicked();
 
 private:
     Ui::MainWindow *ui;
