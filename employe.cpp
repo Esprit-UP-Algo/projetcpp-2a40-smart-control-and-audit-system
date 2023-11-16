@@ -2,6 +2,8 @@
 #include <QSqlQuery>
 #include <QtDebug>
 #include <QObject>
+#include <QHeaderView>
+#include <QTableView>
 
 Employe::Employe()
 {
@@ -145,12 +147,17 @@ bool Employe::supprimer(int id)
 
 QSqlQueryModel* Employe::afficher()
 {
+
     QSqlQueryModel* model=new QSqlQueryModel();
     model->setQuery("SELECT id, nom, prénom,poste FROM GESTION_EMPLOYÉ");
     model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id"));
     model->setHeaderData(1, Qt::Horizontal,QObject::tr("Nom"));
     model->setHeaderData(2, Qt::Horizontal,QObject::tr("Prénom"));
     model->setHeaderData(3, Qt::Horizontal,QObject::tr("Poste"));
+    QTableView* tableView = new QTableView;
+                tableView->setModel(model);
+    QHeaderView* headerView = tableView->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
     return model;
 }
 

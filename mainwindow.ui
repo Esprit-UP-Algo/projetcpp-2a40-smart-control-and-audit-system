@@ -76,29 +76,6 @@ background: none;</string>
       <string>Trier</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="rechercher">
-     <property name="geometry">
-      <rect>
-       <x>870</x>
-       <y>700</y>
-       <width>141</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border-radius: 10px;
-color: #D8D8D8;
-font-family: Inter;
-font-size: 20px;
-font-style: normal;
-font-weight: 800;
-line-height: 23px; /* 115% */
-background: none;</string>
-     </property>
-     <property name="text">
-      <string>Rechercher</string>
-     </property>
-    </widget>
     <widget class="QTableView" name="table">
      <property name="geometry">
       <rect>
@@ -109,13 +86,7 @@ background: none;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">QTableView {
-    border-radius: 36px;
-    gridline-color:#FCAE19;
-	background:none;
-	background-color:transparent;
-
-}</string>
+      <string notr="true">background:none;</string>
      </property>
     </widget>
     <widget class="QGroupBox" name="groupBox">
@@ -148,9 +119,9 @@ background-repeat : no repeat;</string>
      <widget class="QPushButton" name="pushButton_4">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>100</y>
-        <width>141</width>
+        <x>200</x>
+        <y>80</y>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -171,9 +142,9 @@ background: none;</string>
      <widget class="QPushButton" name="modifier">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>100</y>
-        <width>141</width>
+        <x>40</x>
+        <y>80</y>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -214,11 +185,57 @@ background: none;</string>
        <string>ID</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="chatt">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>120</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 10px;
+color: #D8D8D8;
+font-family: Inter;
+font-size: 20px;
+font-style: normal;
+font-weight: 800;
+line-height: 23px; /* 115% */
+background: none;</string>
+      </property>
+      <property name="text">
+       <string>Chat</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_5">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>120</y>
+        <width>181</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-radius: 10px;
+color: #D8D8D8;
+font-family: Inter;
+font-size: 20px;
+font-style: normal;
+font-weight: 800;
+line-height: 23px; /* 115% */
+background: none;</string>
+      </property>
+      <property name="text">
+       <string>Temps du travail</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QLineEdit" name="recherch">
      <property name="geometry">
       <rect>
-       <x>860</x>
+       <x>850</x>
        <y>740</y>
        <width>161</width>
        <height>41</height>
@@ -249,7 +266,7 @@ background-repeat:no repeat;
      <property name="title">
       <string/>
      </property>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="pdf">
       <property name="geometry">
        <rect>
         <x>28</x>
@@ -305,6 +322,31 @@ background: none;</string>
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rechercher">
+     <property name="geometry">
+      <rect>
+       <x>870</x>
+       <y>700</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">text-align:center;
+border-radius: 10px;
+color: #D8D8D8;
+font-family: Inter;
+font-size: 20px;
+font-style: normal;
+font-weight: 800;
+line-height: 23px; /* 115% */
+background: none;
+</string>
+     </property>
+     <property name="text">
+      <string>Rechercher</string>
      </property>
     </widget>
    </widget>
@@ -885,7 +927,193 @@ background-image : url(C:/Users/MSI/Downloads/return.png);
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="chat">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1600</width>
+      <height>900</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MS Shell Dlg 2</family>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(C:/Users/MSI/Downloads/chat (2).png);
+</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="return_3">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>198</y>
+       <width>53</width>
+       <height>47</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;
+background-image : url(C:/Users/MSI/Downloads/return.png);
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QTextBrowser" name="tablechat">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>400</y>
+       <width>561</width>
+       <height>181</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="sendmsg">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>600</y>
+       <width>561</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="tempss">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1600</width>
+      <height>900</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(C:/Users/MSI/Downloads/temps1.png);
+</string>
+    </property>
+    <property name="title">
+     <string>GroupBox</string>
+    </property>
+    <widget class="QCalendarWidget" name="calendarWidget">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>280</y>
+       <width>481</width>
+       <height>281</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+    </widget>
+    <widget class="QTimeEdit" name="start">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>580</y>
+       <width>181</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+    </widget>
+    <widget class="QTimeEdit" name="finish">
+     <property name="geometry">
+      <rect>
+       <x>800</x>
+       <y>580</y>
+       <width>181</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="eng_2">
+     <property name="geometry">
+      <rect>
+       <x>680</x>
+       <y>660</y>
+       <width>231</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>-1</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QPushButton
+{
+	background:none;
+	text-align: center;
+    padding-left:10px;
+	border-radius: 10px;
+    
+	background-color :  rgba(189, 76, 224, 1);
+color:#fff;
+    font-family: Arial, sans-serif; 
+    font-size: 20px;
+    font-weight: bold; 
+} 
+QPushButton:hover
+{
+	border : 2px solid  rgba(189, 76, 224, 1);	
+	background-color: rgba(84, 16, 149, 1);
+
+}
+</string>
+     </property>
+     <property name="text">
+      <string>Enregistrer</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="return_4">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>210</y>
+       <width>53</width>
+       <height>47</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border : none;
+background-image : url(C:/Users/MSI/Downloads/return.png);
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
    <zorder>ajout</zorder>
+   <zorder>chat</zorder>
+   <zorder>tempss</zorder>
    <zorder>base</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
