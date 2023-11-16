@@ -322,7 +322,7 @@
      <property name="geometry">
       <rect>
        <x>1460</x>
-       <y>180</y>
+       <y>183</y>
        <width>351</width>
        <height>121</height>
       </rect>
@@ -374,9 +374,9 @@ color:rgb(167, 140, 255);</string>
      <property name="geometry">
       <rect>
        <x>1460</x>
-       <y>430</y>
+       <y>424</y>
        <width>251</width>
-       <height>21</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -391,9 +391,9 @@ color:rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>1460</x>
-       <y>530</y>
-       <width>241</width>
-       <height>21</height>
+       <y>525</y>
+       <width>251</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -427,7 +427,7 @@ color: rgb(184, 126, 255);</string>
      <property name="geometry">
       <rect>
        <x>1460</x>
-       <y>730</y>
+       <y>733</y>
        <width>251</width>
        <height>21</height>
       </rect>
@@ -443,15 +443,16 @@ color:rgb(170, 170, 255);</string>
     <widget class="QPushButton" name="ajouter">
      <property name="geometry">
       <rect>
-       <x>170</x>
-       <y>870</y>
+       <x>630</x>
+       <y>830</y>
        <width>181</width>
        <height>61</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color:transparent;
-font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">color:rgb(255, 255, 255);
+font: 18pt &quot;MS Shell Dlg 2&quot;;
+background-color:transparent;</string>
      </property>
      <property name="text">
       <string>ajouter</string>
@@ -460,18 +461,18 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
     <widget class="QTableView" name="table_entreprise">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>330</y>
-       <width>1091</width>
-       <height>461</height>
+       <x>170</x>
+       <y>320</y>
+       <width>1111</width>
+       <height>481</height>
       </rect>
      </property>
     </widget>
     <widget class="QPushButton" name="supprimer">
      <property name="geometry">
       <rect>
-       <x>970</x>
-       <y>870</y>
+       <x>1380</x>
+       <y>910</y>
        <width>191</width>
        <height>61</height>
       </rect>
@@ -498,14 +499,16 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
     <widget class="QPushButton" name="trier">
      <property name="geometry">
       <rect>
-       <x>430</x>
-       <y>870</y>
+       <x>390</x>
+       <y>830</y>
        <width>181</width>
        <height>61</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">color:rgb(255, 255, 255);
+font: 18pt &quot;MS Shell Dlg 2&quot;;
+background-color:transparent;</string>
      </property>
      <property name="text">
       <string>trier</string>
@@ -514,8 +517,8 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
     <widget class="QComboBox" name="supprimer_2">
      <property name="geometry">
       <rect>
-       <x>1230</x>
-       <y>870</y>
+       <x>1430</x>
+       <y>840</y>
        <width>301</width>
        <height>61</height>
       </rect>
@@ -524,8 +527,8 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
     <widget class="QPushButton" name="chercher">
      <property name="geometry">
       <rect>
-       <x>970</x>
-       <y>220</y>
+       <x>1130</x>
+       <y>840</y>
        <width>141</width>
        <height>51</height>
       </rect>
@@ -542,11 +545,14 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
     <widget class="QLineEdit" name="l_chercher">
      <property name="geometry">
       <rect>
-       <x>1130</x>
-       <y>220</y>
+       <x>860</x>
+       <y>830</y>
        <width>231</width>
        <height>61</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;</string>
      </property>
     </widget>
     <widget class="QPushButton" name="refresh">
@@ -578,8 +584,8 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
     <widget class="QPushButton" name="modifier_btn">
      <property name="geometry">
       <rect>
-       <x>690</x>
-       <y>870</y>
+       <x>1590</x>
+       <y>910</y>
        <width>191</width>
        <height>61</height>
       </rect>
@@ -597,36 +603,23 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
      <property name="geometry">
       <rect>
        <x>970</x>
-       <y>150</y>
-       <width>141</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>PDF</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="stat">
-     <property name="geometry">
-      <rect>
-       <x>1160</x>
-       <y>150</y>
-       <width>141</width>
+       <y>230</y>
+       <width>51</width>
        <height>51</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">background-color:transparent;</string>
      </property>
      <property name="text">
-      <string>statistique</string>
+      <string/>
      </property>
     </widget>
     <widget class="QLabel" name="lab_stat">
      <property name="geometry">
       <rect>
-       <x>1550</x>
-       <y>790</y>
+       <x>60</x>
+       <y>830</y>
        <width>300</width>
        <height>200</height>
       </rect>
@@ -644,6 +637,147 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>1340</x>
+       <y>830</y>
+       <width>441</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="image.qrc">:/modsupp.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>970</x>
+       <y>230</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="image.qrc">:/Paper.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="localisation_btn">
+     <property name="geometry">
+      <rect>
+       <x>1070</x>
+       <y>230</y>
+       <width>51</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="localisation_2">
+     <property name="geometry">
+      <rect>
+       <x>1070</x>
+       <y>230</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="image.qrc">:/Location.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="email">
+     <property name="geometry">
+      <rect>
+       <x>1140</x>
+       <y>230</y>
+       <width>51</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_18">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>230</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="image.qrc">:/envelope.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>label</zorder>
+    <zorder>bouton_menu</zorder>
+    <zorder>bouton_menu_2</zorder>
+    <zorder>bouton_menu_3</zorder>
+    <zorder>bouton_menu_4</zorder>
+    <zorder>bouton_menu_5</zorder>
+    <zorder>bouton_menu_6</zorder>
+    <zorder>label_2</zorder>
+    <zorder>label_3</zorder>
+    <zorder>label_4</zorder>
+    <zorder>label_5</zorder>
+    <zorder>label_6</zorder>
+    <zorder>label_7</zorder>
+    <zorder>label_8</zorder>
+    <zorder>label_9</zorder>
+    <zorder>label_10</zorder>
+    <zorder>label_11</zorder>
+    <zorder>label_12</zorder>
+    <zorder>label_13</zorder>
+    <zorder>ajouter</zorder>
+    <zorder>table_entreprise</zorder>
+    <zorder>trier</zorder>
+    <zorder>chercher</zorder>
+    <zorder>l_chercher</zorder>
+    <zorder>refresh</zorder>
+    <zorder>lab_stat</zorder>
+    <zorder>label_16</zorder>
+    <zorder>modifier_btn</zorder>
+    <zorder>supprimer</zorder>
+    <zorder>supprimer_2</zorder>
+    <zorder>label_17</zorder>
+    <zorder>exportPDFBtn</zorder>
+    <zorder>localisation_2</zorder>
+    <zorder>localisation_btn</zorder>
+    <zorder>label_18</zorder>
+    <zorder>email</zorder>
    </widget>
    <widget class="QGroupBox" name="ajout_entreprise">
     <property name="geometry">
@@ -683,7 +817,7 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="l_nom">
@@ -696,7 +830,7 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="l_email">
@@ -708,8 +842,17 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
        <height>61</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>10</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
      <property name="styleSheet">
-      <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="l_adresse">
@@ -721,14 +864,23 @@ font: 24pt &quot;MS Shell Dlg 2&quot;;</string>
        <height>61</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>10</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
      <property name="styleSheet">
-      <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+      <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
     </widget>
     <widget class="QPushButton" name="enregistrer">
      <property name="geometry">
       <rect>
-       <x>650</x>
+       <x>780</x>
        <y>880</y>
        <width>191</width>
        <height>61</height>
@@ -772,7 +924,7 @@ QPushButton:hover
     <widget class="QPushButton" name="annuler">
      <property name="geometry">
       <rect>
-       <x>920</x>
+       <x>1070</x>
        <y>880</y>
        <width>191</width>
        <height>61</height>
@@ -820,51 +972,6 @@ QPushButton:hover
       <string/>
      </property>
     </widget>
-    <widget class="QPushButton" name="modi">
-     <property name="geometry">
-      <rect>
-       <x>1210</x>
-       <y>880</y>
-       <width>191</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Arial</family>
-       <pointsize>-1</pointsize>
-       <weight>75</weight>
-       <italic>false</italic>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">
-QPushButton
-{
-	background:none;
-	text-align: center;
-    padding-left:10px;
-	border-radius: 10px;
-    
-	background-color :  rgba(189, 76, 224, 1);
-color:#fff;
-    font-family: Arial, sans-serif; 
-    font-size: 20px;
-    font-weight: bold; 
-} 
-QPushButton:hover
-{
-	border : 2px solid  rgba(189, 76, 224, 1);	
-	background-color: rgba(84, 16, 149, 1);
-
-}
-</string>
-     </property>
-     <property name="text">
-      <string>modifier</string>
-     </property>
-    </widget>
     <widget class="QComboBox" name="l_etate">
      <property name="geometry">
       <rect>
@@ -888,7 +995,7 @@ QPushButton:hover
      </item>
      <item>
       <property name="text">
-       <string>Non  accreditee</string>
+       <string>Non accreditee</string>
       </property>
      </item>
     </widget>
@@ -1015,6 +1122,11 @@ QPushButton:hover
        <height>71</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QLineEdit" name="mod_adresse">
      <property name="geometry">
@@ -1112,12 +1224,12 @@ QPushButton:hover
      </property>
      <item>
       <property name="text">
-       <string>accreditee</string>
+       <string>Accreditee</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>non accreditee</string>
+       <string>Non accreditee</string>
       </property>
      </item>
     </widget>
@@ -1163,10 +1275,306 @@ QPushButton:hover
       <string/>
      </property>
     </widget>
+    <zorder>label_15</zorder>
+    <zorder>mod_nom</zorder>
+    <zorder>mod_email</zorder>
+    <zorder>mod_adresse</zorder>
+    <zorder>mod_id</zorder>
+    <zorder>mod_specialite</zorder>
+    <zorder>mod_reception</zorder>
+    <zorder>mod_enregistrer</zorder>
+    <zorder>mod_annuler</zorder>
+    <zorder>retour</zorder>
+    <zorder>mod_etat</zorder>
    </widget>
-   <zorder>ajout_entreprise</zorder>
+   <widget class="QGroupBox" name="localisation">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1920</width>
+      <height>1080</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="back_localisation">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1920</width>
+       <height>1080</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="image.qrc">:/localisation.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="retour_local">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>230</y>
+       <width>61</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="localisation_nom">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>320</y>
+       <width>341</width>
+       <height>61</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_21">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>440</y>
+       <width>91</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);
+font: bold 12pt &quot;MS Shell Dlg 2&quot;;</string>
+     </property>
+     <property name="text">
+      <string>adresse</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="localisation_adresse">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>420</y>
+       <width>391</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;
+border:none;
+font: 11pt &quot;MS Shell Dlg 2&quot;;
+color:rgb(170, 170, 255);</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="carte" native="true">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>520</y>
+       <width>531</width>
+       <height>251</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="group_email">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1920</width>
+      <height>1080</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="back_email">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1920</width>
+       <height>1080</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="image.qrc">:/email.png</pixmap>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>230</y>
+       <width>61</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="email_id">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>310</y>
+       <width>301</width>
+       <height>61</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_19">
+     <property name="geometry">
+      <rect>
+       <x>520</x>
+       <y>450</y>
+       <width>881</width>
+       <height>421</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="image.qrc">:/Rectangle 6.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_20">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>410</y>
+       <width>56</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>nom</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="objetEmail">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>550</y>
+       <width>621</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Object</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="bodyEmail">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>620</y>
+       <width>621</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="placeholderText">
+      <string>Body</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="envoyer">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>900</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>envoyer</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="annuler_email">
+     <property name="geometry">
+      <rect>
+       <x>1062</x>
+       <y>900</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>annuler</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="destinataireEmail">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>480</y>
+       <width>621</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Email of the reciever</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="email_nom">
+     <property name="geometry">
+      <rect>
+       <x>790</x>
+       <y>390</y>
+       <width>361</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:rgb(170, 170, 255);
+font: 75 8pt &quot;MS Shell Dlg 2&quot;;
+background-color:transparent;
+border:none;
+</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
    <zorder>modifier_entreprise</zorder>
+   <zorder>ajout_entreprise</zorder>
+   <zorder>group_email</zorder>
    <zorder>groupBox</zorder>
+   <zorder>localisation</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
