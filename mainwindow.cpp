@@ -9,17 +9,32 @@
 #include <QVBoxLayout>
 #include <QObject>
 #include <QDebug>
+#include <QtNetwork>
+#include <QSqlError>
+#include "email.h"
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QtLocation/QGeoServiceProvider>
+#include <QtLocation/QGeoCodingManager>
+#include <QtWidgets/QLineEdit>
+#include <QLineEdit>
+//#include <QWebEngineView>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     //ui->bouton_menu->setStyleSheet();
+     on_stat();
     ui->groupBox->show();
     ui->ajout_entreprise->hide();
+     ui->group_email->hide();
     ui->modifier_entreprise->hide();
+    ui->localisation->hide();
+
 ui->table_entreprise->setModel(e.afficher());
 connect(ui->mod_id, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_mid_currentIndexChanged);
+connect(ui->l_chercher, &QLineEdit::textChanged, this, &MainWindow::on_texte_recherche_textChanged);
 QSqlQuery query;
             query.exec("SELECT id FROM Entreprise");
 
@@ -60,30 +75,35 @@ QString cssbtn="QPushButton"
     ui->l_nom->setStyleSheet(css);
     //ui->modifier->setStyleSheet(cssbtn);
     ui->l_etate->setStyleSheet(css);
+     ui->email_id->setStyleSheet(css);
     ui->l_email->setStyleSheet(css);
     ui->l_specialite->setStyleSheet(css);
     ui->l_adresse->setStyleSheet(css);
     ui->l_reception->setStyleSheet(css);
     ui->l_chercher->setStyleSheet(css);
+    ui->localisation_nom->setStyleSheet(css);
     ui->chercher->setStyleSheet(cssbtn);
-     ui->stat->setStyleSheet(cssbtn);
-    ui->ajouter->setStyleSheet(cssbtn);
+
+   // ui->ajouter->setStyleSheet(cssbtn);
     ui->supprimer->setStyleSheet(cssbtn);
     ui->modifier_btn->setStyleSheet(cssbtn);
     ui->supprimer_2->setStyleSheet(css);
-    ui->modi->setStyleSheet(cssbtn);
-    ui->trier->setStyleSheet(cssbtn);
+    ui->destinataireEmail->setStyleSheet(css);
+    ui->bodyEmail->setStyleSheet(css);
+    ui->objetEmail->setStyleSheet(css);
+   // ui->trier->setStyleSheet(cssbtn);
     ui->mod_enregistrer->setStyleSheet(cssbtn);
-    ui->exportPDFBtn->setStyleSheet(cssbtn);
+     ui->annuler_email->setStyleSheet(cssbtn);
+      ui->envoyer->setStyleSheet(cssbtn);
     ui->mod_annuler->setStyleSheet(cssbtn);
-    ui->mod_id->setStyleSheet(css);
+   // ui->mod_id->setStyleSheet(css);
     ui->mod_nom->setStyleSheet(css);
     ui->mod_email->setStyleSheet(css);
     ui->mod_specialite->setStyleSheet(css);
     ui->mod_adresse->setStyleSheet(css);
     ui->mod_reception->setStyleSheet(css);
     ui->mod_etat->setStyleSheet(css);
-    ui->table_entreprise->setStyleSheet("QTableView{color: white; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
+   /* ui->table_entreprise->setStyleSheet("QTableView{color: #DCBFFF; border-radius: 20px; border: 1px solid rgba(51, 66, 255, 0.00);"
                                                "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
 
                                                "display: flex;"
@@ -93,14 +113,30 @@ QString cssbtn="QPushButton"
                                                "align-items: center;"
                                                "spacing: 24px;"
                                                "flex: 0;}"
-                                                " color: white; background-color: rgba(0, 0, 0, 0.5); ");
+                                                " color: black; background-color: rgba(0, 0, 0, 0.5); ");*/
 
-
+    ui->table_entreprise->setStyleSheet("QTableView {"
+                                        "color: #DCBFFF;"
+                                        "border-radius: 20px;"
+                                        "border: 1px solid rgba(51, 66, 255, 0.0);"
+                                        "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.0), stop: 0.5 rgba(17, 16, 24, 0.51));"
+                                        "display: flex;"
+                                        "width: 484px;"
+                                        "height: 60px;"
+                                        "padding: 20px 16px;"
+                                        "align-items: center;"
+                                        "spacing: 24px;"
+                                        "flex: 0;"
+                                    "}"
+                                    "QHeaderView::section {"
+                                        "background-color: #363062;"
+                                        "color: white;"
+                                    "}");
 
             //ui->supprimer_2->setPlaceholderText("Entrez l'id de l'entreprise à supprimer ");
             ui->l_nom->setPlaceholderText("Entrez le nom de l'entreprise ");
             ui->l_id->setPlaceholderText("Entrez l'id de l'entreprise ");
-            ui->l_email->setPlaceholderText("Entrez l'e nom de'Email de l'entreprise ");
+            ui->l_email->setPlaceholderText("Entrez l'Email de l'entreprise ");
            // ui->L_specialite->setPlaceholderText("Entrez la specialité de l'entreprise ");
            // ui->l_reception->setPlaceholderText("Entrez la reception de la demande ");
             ui->l_nom->setPlaceholderText("Entrez le nom de l'entreprise ");
@@ -109,6 +145,8 @@ QString cssbtn="QPushButton"
             ui->mod_nom->setPlaceholderText("entrez le nouveau nom");
             ui->mod_adresse->setPlaceholderText("entrez la nouvelle adresse");
             ui->mod_email->setPlaceholderText("entrez le nouveau email");
+            ui->l_chercher->setPlaceholderText("entrez un id à rechercher");
+
 
 
 
@@ -177,6 +215,7 @@ void MainWindow::on_enregistrer_clicked()
         bool test = e.ajouter();
         if (test)
         {
+            on_stat();
             QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("Ajout avec succès.\nCliquez sur Annuler pour quitter."), QMessageBox::Cancel);
             ui->table_entreprise->setModel(e.afficher());
             ui->l_id->clear();
@@ -190,14 +229,15 @@ void MainWindow::on_enregistrer_clicked()
             ui->groupBox->show();
             ui->supprimer_2->clear();
             QSqlQuery query;
-            query.exec("SELECT id FROM Entreprise");
+                        query.exec("SELECT id FROM Entreprise");
 
-            // Populate the combobox with data from the database
-            while (query.next()) {
-                int id = query.value(0).toInt();
-                ui->supprimer_2->addItem(QString::number(id));
+                        // Populate the combobox with data from the database
+                        while (query.next()) {
+                            int id = query.value(0).toInt();
+                            ui->supprimer_2->addItem(QString::number(id));
+                        }
             }
-        }
+
         else
         {
             QMessageBox::critical(nullptr, QObject::tr("Erreur"), QObject::tr("Échec de l'ajout.\nCliquez sur Annuler pour quitter."), QMessageBox::Cancel);
@@ -228,6 +268,7 @@ void MainWindow::on_supprimer_clicked()
 
         if (test)
         {
+             on_stat();
             QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("Suppression avec succès.\n""Click cancel to exit."), QMessageBox::Cancel);
             ui->table_entreprise->setModel(e.afficher());
             ui->supprimer_2->clear();
@@ -246,6 +287,8 @@ void MainWindow::on_supprimer_clicked()
             QMessageBox::critical(nullptr, QObject::tr("Not OK"), QObject::tr("Suppression failed.\n""Click cancel to exit."), QMessageBox::Cancel);
         }
 }
+
+
 void MainWindow::on_annuler_clicked()
 {
     ui->l_id->clear();
@@ -266,8 +309,10 @@ void MainWindow::on_modi_clicked()
     e.setadresse(ui->l_adresse->text());
     e.setreception_de_la_demande(ui->l_reception->currentText());
     bool test=e.modi(e.getid());
+
     if(test)
     {
+        on_stat();
         QMessageBox::information(nullptr , QObject::tr("OK"),QObject::tr("modification effectuée\nClick Cancel to exit."),QMessageBox::Cancel);
     }
     else {
@@ -282,7 +327,7 @@ void MainWindow::on_trier_clicked()
     ui->table_entreprise->setModel(e.tri());
 }
 
-void MainWindow::on_chercher_clicked()
+/*void MainWindow::on_chercher_clicked()
 {
     QString idPrefix = ui->l_chercher->text();
 
@@ -296,7 +341,7 @@ void MainWindow::on_chercher_clicked()
        // Afficher les résultats dans le QTableView
        ui->table_entreprise->setModel(model);
        ui->table_entreprise->resizeColumnsToContents();
-}
+}*/
 
 void MainWindow::on_refresh_clicked()
 {
@@ -306,6 +351,7 @@ void MainWindow::on_refresh_clicked()
 
 void MainWindow::on_modifier_btn_clicked()
 {
+    ui->mod_id->clear();
     QSqlQuery query;
     query.exec("SELECT id FROM Entreprise");
 
@@ -343,36 +389,40 @@ void MainWindow::updateUI(int selectedId)
     QSqlQuery query;
 
     // Retrieve and set values for other UI elements based on the selected ID
-    query.prepare("SELECT nom, email, specialite,adresse, reception_de_la_demande, etat FROM Entreprise WHERE id = :id");
+    query.prepare("SELECT * FROM Entreprise WHERE id = :id");
     query.bindValue(":id", selectedId);
 
     if (query.exec() && query.next()) {
-        QString nom = query.value(0).toString();
-        QString email = query.value(1).toString();
-        QString specialite = query.value(2).toString();
-        QString adresse = query.value(3).toString();
-        QString reception = query.value(4).toString();
-        QString etat = query.value(5).toString();
+
+        QString nom = query.value(1).toString();
+        QString email = query.value(2).toString();
+        QString specialite = query.value(3).toString();
+        QString adresse = query.value(4).toString();
+        QString reception = query.value(5).toString();
+        QString etat = query.value(6).toString();
 
 
         // Update the UI elements with the retrieved data
         ui->mod_nom->setText(nom);
         ui->mod_email->setText(email);
- ui->mod_adresse->setText(adresse);
-        int index = ui->mod_specialite->findText(specialite);
+        qDebug()<<"Etat: "<<etat;
+
+        ui->mod_adresse->setText(adresse);
+        int index = ui->mod_etat->findText(etat);
+        qDebug()<<"index etat: "<<index;
         if (index != -1) {
-            ui->mod_specialite->setCurrentIndex(index);
+            ui->mod_etat->setCurrentIndex(index);
         }
-         int index2 = ui->mod_etat->findText(etat);
+         qDebug() << index <<endl;
+         int index2 = ui->mod_specialite->findText(specialite);
+
         if (index2 != -1) {
-            ui->mod_etat->setCurrentIndex(index2);
+            ui->mod_specialite->setCurrentIndex(index2);
         }
         int index3 = ui->mod_reception->findText(reception);
         if (index3 != -1) {
             ui->mod_reception->setCurrentIndex(index3);
         }
-
-
 
     }
 }
@@ -415,7 +465,16 @@ void MainWindow::on_mod_enregistrer_clicked()
     Entreprise e(id, nom, email, specialite, adresse, reception_de_la_demande, etat);
 
     // Effectuer l'ajout de l'entreprise
-    bool test = e.modifier();
+       ui->supprimer_2->clear();
+    QSqlQuery query;
+                query.exec("SELECT id FROM Entreprise");
+
+                // Populate the combobox with data from the database
+                while (query.next()) {
+                    int id = query.value(0).toInt();
+                    ui->supprimer_2->addItem(QString::number(id));
+                }
+    //bool test = e.modifier();
     ui->table_entreprise->setModel(e.afficher());
     ui->modifier_entreprise->hide();
     ui->groupBox->show();
@@ -470,22 +529,7 @@ int MainWindow::countEtat(const QString& etat)
 
     return count;
 }
-
-/*void MainWindow::afficherStatistiques()
-{
-    Entreprise entreprise;
-    QString statistiques = entreprise.obtenirStatistiques();
-
-    if (!statistiques.isEmpty()) {
-        QMessageBox::information(this, "Statistiques", statistiques);
-    }
-}
-void MainWindow::on_pushButton_2_clicked()
-{
-
-}*/
-
-void MainWindow::on_stat_clicked()
+void MainWindow::on_stat()
 {
     QList<QWidget*> childWidgets = ui->lab_stat->findChildren<QWidget*>();
     for (QWidget* childWidget : childWidgets) {
@@ -498,7 +542,7 @@ void MainWindow::on_stat_clicked()
 
     float s0, s1;
     s0 = countEtat("Accreditee");
-    s1 = countEtat("Non  accreditee");
+    s1 = countEtat("Non accreditee");
 
     float stat = s0 + s1;
     float x = (stat != 0) ? (s0 * 100) / stat : 0.0;
@@ -532,15 +576,268 @@ void MainWindow::on_stat_clicked()
     chartview->setFixedSize(ui->lab_stat->size());
     chartview->setParent(ui->lab_stat);
     ui->lab_stat->setStyleSheet("background:transparent; color:white; ");
-
     ui->lab_stat->show();
-
 }
-
-
-
 void MainWindow::on_mod_annuler_clicked()
 {
     ui->modifier_entreprise->hide();
     ui->groupBox->show();
 }
+void MainWindow::on_texte_recherche_textChanged(const QString &text)
+{
+    QSqlQueryModel* searchModel = new QSqlQueryModel();
+    searchModel->setQuery(QString("SELECT id, nom, specialite, etat FROM entreprise WHERE id LIKE '%1%'").arg(text));
+
+    if (searchModel->rowCount() > 0) {
+        // If the search result is not empty
+        ui->table_entreprise->setModel(searchModel);
+}
+        if (searchModel->rowCount() == 0) {
+            // If the search result is not empty
+            ui->table_entreprise->setModel(searchModel);
+}
+        // Adjust the header view as needed
+        QHeaderView* headerView = ui->table_entreprise->horizontalHeader();
+        headerView->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+
+
+/*void MainWindow::on_localisation_btn_clicked()
+{
+    ui->localisation->show();
+    ui->groupBox->hide();
+    // Effectuer l'ajout de l'entreprise
+       ui->localisation_nom->clear();
+       QSqlQuery query;
+       query.exec("SELECT nom FROM Entreprise");
+
+       // Populate the combobox with data from the database
+       while (query.next()) {
+           QString nom = query.value(0).toString(); // Utiliser toString() pour récupérer une valeur QString
+           ui->localisation_nom->addItem(nom);
+       }*/
+   /* QWebEngineView *carteView = new QWebEngineView(ui->carteWidget);
+    carteView->load(QUrl(urlCarte));
+    QString nomEntreprise = ui->localisation_nom->currentText();
+
+        QSqlQuery query;
+        query.prepare("SELECT adresse FROM Entreprise WHERE nom = ?");
+        query.addBindValue(nomEntreprise);
+        if (!query.exec()) {
+            QMessageBox::critical(this, "Erreur", "Erreur lors de l'exécution de la requête : " + query.lastError().text());
+            return;
+        }
+        if (query.next()) {
+            QString adresse = query.value(0).toString();
+
+            // Effectuer la géocodage de l'adresse pour obtenir les coordonnées géographiques
+            QString apiKey = "VOTRE_CLE_API";
+            QString url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + QUrl::toPercentEncoding(adresse) + "&key=" + apiKey;
+            QNetworkAccessManager *manager = new QNetworkAccessManager(this); // Utilisation d'un pointeur pour allouer dynamiquement l'objet
+            QNetworkRequest request(url);
+            QNetworkReply *reply = manager->get(request); // Utilisation de l'opérateur -> pour accéder aux membres de l'objet pointé
+
+            QEventLoop eventLoop;
+            QObject::connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
+            eventLoop.exec();
+
+            if (reply->error() == QNetworkReply::NoError) {
+                QByteArray data = reply->readAll();
+                QJsonDocument jsonDoc(QJsonDocument::fromJson(data));
+                QJsonObject jsonObject = jsonDoc.object();
+
+                if (jsonObject["status"].toString() == "OK") {
+                    QJsonArray results = jsonObject["results"].toArray();
+                    if (!results.isEmpty()) {
+                        QJsonObject location = results[0].toObject()["geometry"].toObject()["location"].toObject();
+                        double latitude = location["lat"].toDouble();
+                        double longitude = location["lng"].toDouble();
+
+                        // Utiliser les coordonnées pour afficher la localisation sur la carte
+                        QString urlCarte = "https://www.google.com/maps?q=" + QString::number(latitude) + "," + QString::number(longitude);
+                        ui->carteWidget->load(QUrl(urlCarte));
+                    }
+                }
+            } else {
+                QMessageBox::critical(this, "Erreur", "Erreur lors de la requête de géocodage : " + reply->errorString());
+            }
+
+            reply->deleteLater();
+            delete manager; // Supprimer l'objet manager alloué dynamiquement
+        }
+
+}*/
+
+void MainWindow::on_retour_local_clicked()
+{
+    ui->localisation->hide();
+    ui->groupBox->show();
+}
+
+/*void MainWindow::on_email_clicked()
+{
+     ui->group_email->show();
+    ui->groupBox->hide();
+    ui->email_id->clear();
+    QSqlQuery query;
+    query.exec("SELECT id FROM Entreprise");
+
+    // Clear the combobox before populating it with data
+    ui->email_id->clear();
+
+    // Populate the combobox with data from the database
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        ui->email_id->addItem(QString::number(id));
+    }
+
+}*/
+
+/*void MainWindow::on_email_clicked()
+{
+    ui->group_email->show();
+    ui->groupBox->hide();
+    ui->email_id->clear();
+
+    QSqlQuery query;
+    query.exec("SELECT id, nom, email FROM Entreprise");
+
+    // Clear the combobox before populating it with data
+    ui->email_id->clear();
+
+    // Populate the combobox with data from the database
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString nom = query.value(1).toString();
+        QString email = query.value(2).toString();
+
+        ui->email_id->addItem(QString::number(id));
+    }
+
+    // Connect the currentIndexChanged signal of the combobox to a slot
+    connect(ui->email_id, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+        if (index >= 0) {
+            // Fetch the selected ID from the combobox
+            int selectedId = ui->email_id->itemText(index).toInt();
+
+            // Fetch the associated attributes from the database based on the selected ID
+            QSqlQuery selectedQuery;
+            selectedQuery.prepare("SELECT nom, email FROM Entreprise WHERE id = ?");
+            selectedQuery.addBindValue(selectedId);
+            if (selectedQuery.exec() && selectedQuery.next()) {
+                // Update the line edits with the fetched attribute values
+                ui->email_nom->setText(selectedQuery.value(0).toString());
+                ui->destinataireEmail->setText(selectedQuery.value(1).toString());
+            }
+        }
+    });
+}*/
+void MainWindow::on_email_clicked()
+{
+    ui->group_email->show();
+    ui->groupBox->hide();
+    ui->email_id->clear();
+
+    QSqlQuery query;
+    query.exec("SELECT id, nom, email FROM Entreprise");
+
+    // Clear the combobox before populating it with data
+    ui->email_id->clear();
+
+    // Add an empty item to the combobox as the first option
+    ui->email_id->addItem("");
+
+    // Populate the combobox with data from the database
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString nom = query.value(1).toString();
+        QString email = query.value(2).toString();
+
+        ui->email_id->addItem(QString::number(id));
+    }
+
+    // Connect the currentIndexChanged signal of the combobox to a slot
+    connect(ui->email_id, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+        if (index > 0) { // Check if an item other than the empty item is selected
+            // Fetch the selected ID from the combobox
+            int selectedId = ui->email_id->itemText(index).toInt();
+
+            // Fetch the associated attributes from the database based on the selected ID
+            QSqlQuery selectedQuery;
+            selectedQuery.prepare("SELECT nom, email FROM Entreprise WHERE id = ?");
+            selectedQuery.addBindValue(selectedId);
+            if (selectedQuery.exec() && selectedQuery.next()) {
+                // Update the line edits with the fetched attribute values
+                ui->email_nom->setText(selectedQuery.value(0).toString());
+                ui->destinataireEmail->setText(selectedQuery.value(1).toString());
+            }
+        } else {
+            // If the empty item is selected, clear the line edits
+            ui->email_nom->clear();
+            ui->destinataireEmail->clear();
+        }
+    });
+}
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->group_email->hide();
+    ui->groupBox->show();
+}
+void MainWindow::on_envoyer_clicked()
+{
+    mailer::sendEmail(ui->destinataireEmail->text(), ui->objetEmail->text(), ui->bodyEmail->text());
+    ui->group_email->hide();
+    ui->groupBox->show();
+}
+void MainWindow::on_annuler_email_clicked()
+{
+    ui->destinataireEmail->clear();
+    ui->objetEmail->clear();
+    ui->bodyEmail->clear();
+    /*ui->group_email->hide();
+    ui->groupBox->show();*/
+}
+void MainWindow::on_localisation_btn_clicked()
+{
+    ui->localisation->show();
+    ui->groupBox->hide();
+    ui->localisation_nom->clear();
+    QSqlQuery query;
+    query.exec("SELECT nom, adresse FROM Entreprise");
+
+    // Clear the combobox before populating it with data
+    ui->localisation_nom->clear();
+
+    // Add an empty item to the combobox as the first option
+    ui->localisation_nom->addItem("");
+
+    // Populate the combobox with data from the database
+    while (query.next()) {
+        QString nom = query.value(0).toString();
+        QString adresse = query.value(1).toString();
+
+        ui->localisation_nom->addItem(nom);
+    }
+
+    // Connect the currentIndexChanged signal of the combobox to a slot
+    connect(ui->localisation_nom, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+        if (index > 0) { // Check if an item other than the empty item is selected
+            // Fetch the selected name from the combobox
+            QString selectedNom = ui->localisation_nom->itemText(index);
+
+            // Fetch the associated address from the database based on the selected name
+            QSqlQuery selectedQuery;
+            selectedQuery.prepare("SELECT adresse FROM Entreprise WHERE nom = ?");
+            selectedQuery.addBindValue(selectedNom);
+            if (selectedQuery.exec() && selectedQuery.next()) {
+                // Update the line edit with the fetched address value
+                ui->localisation_adresse->setText(selectedQuery.value(0).toString());
+            }
+        } else {
+            // If the empty item is selected, clear the line edit
+            ui->localisation_adresse->clear();
+        }
+    });
+}
+
