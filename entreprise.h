@@ -6,7 +6,7 @@ class Entreprise
 {
 public:
     Entreprise();
-    Entreprise(int,QString,QString,QString,QString,QString,QString);
+    Entreprise(int,QString,QString,QString,QString,QString,QString,QString);
     int getid();
     QString getnom();
     QString getemail();
@@ -14,6 +14,7 @@ public:
     QString getadresse();
     QString getreception_de_la_demande();
     QString getetat();
+    QString getnumero();
     void setid(int);
     void setnom(QString);
     void setemail(QString);
@@ -21,6 +22,7 @@ public:
     void setadresse(QString);
     void setreception_de_la_demande(QString);
     void setetat(QString);
+    void setnumero(QString);
     bool ajouter();
     QSqlQueryModel *afficher();
     bool supprimer(int);
@@ -37,6 +39,7 @@ public:
     QString adresse;
     QString reception_de_la_demande;
     QString etat;
+    QString numero;
 
 
 };
