@@ -44,12 +44,6 @@ private slots:
 int countEtat(const QString& );
     void on_exportPDFBtn_clicked();
 void on_texte_recherche_textChanged(const QString &text);
-
-    //void on_pushButton_2_clicked();
-   /* void afficherStatistiques();
-    void afficherStatistiques() const;*/
-
-//void on_stat_clicked();
 void on_stat();
 
 void on_mod_enregistrer_clicked();
@@ -70,7 +64,14 @@ void on_envoyer_clicked();
 
 void on_annuler_email_clicked();
 
-void on_localisation_btn_clicked();
+
+
+void on_sms_annuler_clicked();
+
+void on_sms_btn_clicked();
+
+void on_sms_envoyer_clicked();
+
 
 private:
     Ui::MainWindow *ui;
