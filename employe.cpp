@@ -16,9 +16,10 @@ Employe::Employe()
     date_embauche=QDate::currentDate();
     fin_contrat=QDate::currentDate();
     numero_telephone="";
+    image="";
 }
 
-Employe::Employe(int id, QString nom , QString prenom , QDate date_naissance , QString poste , QString sexe , QString email, QString numero_telephone , QDate date_embauche , QDate fin_contrat )
+Employe::Employe(int id, QString nom , QString prenom , QDate date_naissance , QString poste , QString sexe , QString email, QString numero_telephone , QDate date_embauche , QDate fin_contrat, QString image )
 {
     this->id=id;
     this->nom=nom;
@@ -30,6 +31,7 @@ Employe::Employe(int id, QString nom , QString prenom , QDate date_naissance , Q
     this->date_embauche=date_embauche;
     this->fin_contrat=fin_contrat;
     this->numero_telephone=numero_telephone;
+    this->image=image;
 }
 int Employe::getid()
 {
@@ -67,6 +69,8 @@ QString Employe::getnumero_telephone()
 {
     return numero_telephone;
 }
+
+
 
 void Employe::setid(int id)
 {
@@ -121,8 +125,8 @@ void Employe::setfin_contrat(QDate fin_contrat)
 bool Employe::ajouter()
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO GESTION_EMPLOYÉ(ID, NOM, PRÉNOM, DATE_NAISSANCE, EMAIL, NUMÉRO_TELEPHONE, SEXE, POSTE, DATE_EMBAUCHE, FIN_CONTRAT) "
-                        "VALUES (:ID, :NOM, :PRENOM, :DATE_NAISSANCE, :EMAIL, :NUMERO_TELEPHONE, :SEXE, :POSTE, :DATE_EMBAUCHE, :FIN_CONTRAT)");
+    query.prepare("INSERT INTO GESTION_EMPLOYÉ(ID, NOM, PRÉNOM, DATE_NAISSANCE, EMAIL, NUMÉRO_TELEPHONE, SEXE, POSTE, DATE_EMBAUCHE, FIN_CONTRAT,IMAGE) "
+                        "VALUES (:ID, :NOM, :PRENOM, :DATE_NAISSANCE, :EMAIL, :NUMERO_TELEPHONE, :SEXE, :POSTE, :DATE_EMBAUCHE, :FIN_CONTRAT,:IMAGE)");
     query.bindValue(":ID",id);
     query.bindValue(":NOM",nom);
     query.bindValue(":PRENOM",prenom);
@@ -133,6 +137,7 @@ bool Employe::ajouter()
     query.bindValue(":POSTE",poste);
     query.bindValue(":DATE_EMBAUCHE",date_embauche);
     query.bindValue(":FIN_CONTRAT",fin_contrat);
+    query.bindValue(":IMAGE",image);
     return query.exec();
 }
 
@@ -164,7 +169,7 @@ QSqlQueryModel* Employe::afficher()
 bool Employe::modifier(int nid)
 {
     QSqlQuery query;
-    query.prepare("UPDATE GESTION_EMPLOYÉ SET nom=:nom, prénom=:prenom, date_naissance=:date_naissance, email=:email, numéro_telephone=:numero_telephone, sexe=:sexe, poste=:poste, date_embauche=:date_embauche, fin_contrat=:fin_contrat WHERE id=:id");
+    query.prepare("UPDATE GESTION_EMPLOYÉ SET nom=:nom, prénom=:prenom, date_naissance=:date_naissance, email=:email, numéro_telephone=:numero_telephone, sexe=:sexe, poste=:poste, date_embauche=:date_embauche, fin_contrat=:fin_contrat,image=:image WHERE id=:id");
     query.bindValue(":id",nid);
     query.bindValue(":nom",nom);
     query.bindValue(":prenom",prenom);
@@ -175,6 +180,7 @@ bool Employe::modifier(int nid)
     query.bindValue(":poste",poste);
     query.bindValue(":date_embauche",date_embauche);
     query.bindValue(":fin_contrat",fin_contrat);
+    query.bindValue(":image",image);
 
     return query.exec();
 }

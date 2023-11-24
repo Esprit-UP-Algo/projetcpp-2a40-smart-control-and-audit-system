@@ -16,6 +16,7 @@
 #include <QMap>
 
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -45,15 +46,19 @@ private slots:
 
     void on_temps_clicked();
 
-    void on_eng_2_clicked();
-
     void on_return_4_clicked();
 
     void on_pushButton_5_clicked();
     void afficherchat();
-
-
     void on_sendmsg_editingFinished();
+    void updateTime();
+    void saveEmployeeTime(const QDateTime &startTime, const QDateTime &finishTime);
+    void openImageDialog();
+
+
+
+
+    void on_calendarWidget_clicked(const QDate &date);
 
 private:
     Ui::MainWindow *ui;
@@ -65,12 +70,14 @@ private:
     QDateEdit *date;
     QComboBox *sexe;
     QComboBox *idsup;
+    QComboBox *tempsss;
     QLineEdit *email;
     QLineEdit *num;
     QComboBox *poste;
     QDateEdit *date1;
     QDateEdit *date2;
     QLineEdit *recherch;
+
 
 };
 #endif // MAINWINDOW_H

@@ -16,6 +16,10 @@
 #include <QDate>
 #include <QTime>
 #include "arduino.h"
+#include <cstdlib>
+#include <QFileDialog>
+#include <QPixmap>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -23,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->line_image->hide();
+    connect(ui->pushButtonOpenImage, &QPushButton::clicked, this, &MainWindow::openImageDialog);
+
 
     //connect arduino
         arduino a;
@@ -101,27 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
                                                            "spacing: 24px;"
                                                            "flex: 0;}"
                                                             " color: white; background-color: rgba(0, 0, 0, 0.5); ");
-    ui->start->setStyleSheet("font-size: 20px;"
-                             "color: #fff; border-radius: 15px; border: 1px solid rgba(51, 66, 255, 0.00);"
-                                 "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
-                                 "display: flex;"
-                                 "width: 484px;"
-                                 "height: 60px;"
-                                 "padding: 5px 2px;"
-                                  "padding-left: 15px;"
-                                 "flex: 0;"
-                                 "font-family:Arial;");
 
-    ui->finish->setStyleSheet("font-size: 20px;"
-                              "color: #fff; border-radius: 15px; border: 1px solid rgba(51, 66, 255, 0.00);"
-                                  "background: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 0, y2: 0, stop: 0.5 rgba(17, 16, 24, 0.00), stop: 0.5 rgba(17, 16, 24, 0.51));"
-                                  "display: flex;"
-                                  "width: 484px;"
-                                  "height: 60px;"
-                                  "padding: 5px 2px;"
-                                   "padding-left: 15px;"
-                                  "flex: 0;"
-                                  "font-family:Arial;");
 
     idsup = ui->idsup;
     idsup->setStyleSheet("font-size: 15px;"
@@ -291,6 +278,64 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::openImageDialog() {
+    QString imagePath = QFileDialog::getOpenFileName(this, "Select Image", "", "Images (*.png *.jpg *.bmp *.gif)");
+
+    if (!imagePath.isEmpty()) {
+        // Load the image using QPixmap
+        QPixmap image(imagePath);
+
+        // Update the QLabel with the image
+        ui->image->setPixmap(image.scaled(ui->image->size(), Qt::KeepAspectRatio));
+        ui->line_image->setText(imagePath);
+        ui->line_image->hide();
+    }
+}
+
+
+void MainWindow::updateTime() {
+    QDate selectedDate = ui->calendarWidget->selectedDate();
+
+    // Check if the selected day is Saturday or Sunday (weekend)
+        if (selectedDate.dayOfWeek() == Qt::Saturday || selectedDate.dayOfWeek() == Qt::Sunday) {
+            ui->label_12->setText("It is a weekend. No work scheduled.");
+            return;}
+    // Use qrand() to generate random start time between 8am and 11am (inclusive)
+    int randomStartHour = qrand() % 4 + 8;
+    QTime startTime(randomStartHour, 0);
+
+    // Calculate finish time (6 hours later) and ensure it is within 8am to 5pm
+    QTime finishTime = startTime.addSecs(6 * 3600);
+    if (finishTime > QTime(17, 0)) {
+        // Adjust finish time to be within the valid range
+        finishTime = QTime(17, 0);
+        startTime = finishTime.addSecs(-6 * 3600);
+    }
+
+    QDateTime startDateTime(selectedDate, startTime);
+    QDateTime finishDateTime(selectedDate, finishTime);
+
+    ui->label_12->setText("Start Time: " + startDateTime.toString("hh:mm AP") +
+                       "\nFinish Time: " + finishDateTime.toString("hh:mm AP"));
+
+}
+
+void MainWindow::saveEmployeeTime(const QDateTime &startTime, const QDateTime &finishTime) {
+    QSqlQuery query;
+
+    int mid = ui->idsup->currentText().toInt();
+    query.prepare("UPDATE GESTION_EMPLOYÉ SET start_time = :start_time, finish_time = :finish_time WHERE id = :id;");
+    query.bindValue(":id", mid);
+    query.bindValue(":start_time", startTime.toString("dd-MM-yyyy hh:mm:ss"));
+    query.bindValue(":finish_time", finishTime.toString("dd-MM-yyyy hh:mm:ss"));
+
+    if (query.exec()) {
+        QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("Updated\nClick Cancel to exit."), QMessageBox::Cancel);
+    } else {
+        QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("Not updated\nClick Cancel to exit."), QMessageBox::Cancel);
+    }
+}
+
 void MainWindow::on_pushButton_4_clicked()
 {
         Employe E1;
@@ -340,6 +385,7 @@ void MainWindow::on_eng_clicked()
         QString sexe=ui->sexe->currentText();
         QDate date_embauche=ui->date1->date();
         QDate fin_contrat=ui->date2->date();
+        QString image=ui->line_image->text();
         QRegExp regex2("^[A-Za-z]{2,30}");
         QRegExp regex3("^[A-Za-z0-9]{3,30}$");
         QRegExp regex4("^[0-9]{8}$");
@@ -349,7 +395,7 @@ void MainWindow::on_eng_clicked()
         {
             if(nom.contains(regex2) && prenom.contains(regex2) && email.contains(emailRegex) && numero_telephone.contains(regex4))
             {
-                Employe E(id,nom,prenom,date_naissance,poste,sexe,email,numero_telephone,date_embauche,fin_contrat);
+                Employe E(id,nom,prenom,date_naissance,poste,sexe,email,numero_telephone,date_embauche,fin_contrat,image);
                 bool test=E.ajouter();
                 if(test)
                 {
@@ -430,6 +476,7 @@ void MainWindow::on_modifier_clicked()
                               QString mposte = query.value("poste").toString();
                               QDate mdate1 = query.value("date_embauche").toDate();
                               QDate mdate2 = query.value("fin_contrat").toDate();
+                              QString mimage=query.value("image").toString();
 
                               ui->id->setText(QString::number(mid));
                               ui->id->setReadOnly(true);
@@ -442,6 +489,7 @@ void MainWindow::on_modifier_clicked()
                               ui->poste->setCurrentText(mposte);
                               ui->date1->setDate(mdate1);
                               ui->date2->setDate(mdate2);
+                              ui->image->setText(mimage);
                               QMessageBox::information(nullptr , QObject::tr("OK"),QObject::tr("Modification effectué\nClick Cancel to exit."),QMessageBox::Cancel);
 
 
@@ -498,82 +546,104 @@ void MainWindow::on_texte_recherche_textChanged(const QString &text)
 
 void MainWindow::on_pdf_clicked()
 {
-    QSqlQuery query;
-            query.exec("SELECT id,nom,prénom,poste FROM GESTION_EMPLOYÉ ");
+    QString strStream;
 
-            // Create a QPdfWriter to write to a PDF file
-            QPdfWriter pdfWriter("GESTION_EMPLOYÉ.pdf");
-            pdfWriter.setPageSize(QPageSize(QPageSize::A4));
-            pdfWriter.setPageOrientation(QPageLayout::Portrait);
-            pdfWriter.setPageMargins(QMarginsF(100, 100, 100, 100));
+     QTextStream out(&strStream);
 
-            // Create a QPainter to draw on the PDF
-            QPainter painter(&pdfWriter);
 
-            // Create a QTextDocument to format the data
-            QTextDocument doc;
+                                     const int rowCount = ui->table->model()->rowCount();
 
-            // Create a QTextCursor to write to the QTextDocument
-            QTextCursor cursor(&doc);
+                                     const int columnCount = ui->table->model()->columnCount();
 
-            // Create a table format with 3 columns and adjust the table and text size
-            QTextTableFormat tableFormat;
-            tableFormat.setAlignment(Qt::AlignLeft);
-            tableFormat.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
-            tableFormat.setCellSpacing(0);
-            tableFormat.setCellPadding(5); // Adjust cell padding for more space
 
-            // Define the table
-            QTextTable* table = cursor.insertTable(1, 4, tableFormat);
 
-            // Set column widths and make the table larger
-            table->format().setColumnWidthConstraints(QVector<QTextLength>{
-                QTextLength(QTextLength::PercentageLength, 550), // Adjust the column widths
-                QTextLength(QTextLength::PercentageLength, 550),
-                QTextLength(QTextLength::PercentageLength, 650),
-                QTextLength(QTextLength::PercentageLength, 650)
-            });
+                                     out <<  "<html>\n"
 
-            // Create a QFont with a larger size
-            QFont font = doc.defaultFont();
-            font.setPointSize(140); // Adjust the font size
-            doc.setDefaultFont(font);
+                                         "<head>\n"
 
-            // Populate the table with column headers
-            QTextTableCell headerCell = table->cellAt(0, 0);
-            headerCell.firstCursorPosition().insertText("ID");
-            QTextTableCell headerCell2 = table->cellAt(0, 1);
-            headerCell2.firstCursorPosition().insertText("Nom");
-            QTextTableCell headerCell3 = table->cellAt(0, 2);
-            headerCell3.firstCursorPosition().insertText("Prénom");
-            QTextTableCell headerCell4 = table->cellAt(0, 3);
-            headerCell4.firstCursorPosition().insertText("Poste");
+                                         "<meta Content=\"Text/html; charset=Windows-1251\">\n"
 
-            // Iterate over the database table rows and write them to the PDF
-            int row = 1;
-            while (query.next()) {
-                int id = query.value(0).toInt();
-                QString nom = query.value(1).toString();
-                QString prenom = query.value(2).toString();
-                QString poste = query.value(3).toString();
+                                         <<  QString("<title>%1</title>\n").arg("strTitle")
 
-                // Add a new row to the table and populate it with data
-                table->appendRows(1);
-                QTextTableCell dataCell = table->cellAt(row, 0);
-                dataCell.firstCursorPosition().insertText(QString::number(id));
-                QTextTableCell dataCell2 = table->cellAt(row, 1);
-                dataCell2.firstCursorPosition().insertText(nom);
-                QTextTableCell dataCell3 = table->cellAt(row, 2);
-                dataCell3.firstCursorPosition().insertText(prenom);
-                QTextTableCell dataCell4 = table->cellAt(row, 3);
-                dataCell4.firstCursorPosition().insertText(poste);
+                                         <<  "</head>\n"
 
-                row++;
-            }
-                  doc.drawContents(&painter);
-           painter.end();
+                                         "<body bgcolor=#ffffff link=#5000A0>\n"
 
-           QMessageBox::information(this, "PDF Exported", "PDF file has been created.");
+
+
+                                        //     "<align='right'> " << datefich << "</align>"
+
+                                         "<center> <H1>Liste des employes </H1></br></br><table border=1 cellspacing=0 cellpadding=2>\n";
+
+
+
+                                     // headers
+
+                                     out << "<thead><tr bgcolor=#f0f0f0> <th>Numero</th>";
+
+                                     for (int column = 0; column < columnCount; column++)
+
+                                         if (!ui->table->isColumnHidden(column))
+
+                                             out << QString("<th>%1</th>").arg(ui->table->model()->headerData(column, Qt::Horizontal).toString());
+
+                                     out << "</tr></thead>\n";
+
+
+
+                                     // data table
+
+                                     for (int row = 0; row < rowCount; row++) {
+
+                                         out << "<tr> <td bkcolor=0>" << row+1 <<"</td>";
+
+                                         for (int column = 0; column < columnCount; column++) {
+
+                                             if (!ui->table->isColumnHidden(column)) {
+
+                                                 QString data = ui->table->model()->data(ui->table->model()->index(row, column)).toString().simplified();
+
+                                                 out << QString("<td bkcolor=0>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+
+                                             }
+
+                                         }
+
+                                         out << "</tr>\n";
+
+                                     }
+
+                                     out <<  "</table> </center>\n"
+
+                                         "</body>\n"
+
+                                         "</html>\n";
+
+
+
+                               QString fileName = QFileDialog::getSaveFileName((QWidget* )0, "Sauvegarder en PDF", QString(), "*.pdf");
+
+                                 if (QFileInfo(fileName).suffix().isEmpty()) { fileName.append(".pdf"); }
+
+
+
+                                QPrinter printer (QPrinter::PrinterResolution);
+
+                                 printer.setOutputFormat(QPrinter::PdfFormat);
+
+                                printer.setPaperSize(QPrinter::A4);
+
+                               printer.setOutputFileName(fileName);
+
+
+
+                                QTextDocument doc;
+
+                                 doc.setHtml(strStream);
+
+                                 doc.setPageSize(printer.pageRect().size()); // This is necessary if you want to hide the page number
+
+                                 doc.print(&printer);
 }
 
 int MainWindow::countType(const QString& sexe)
@@ -697,35 +767,6 @@ void MainWindow::on_temps_clicked()
     ui->tempss->show();
 }
 
-void MainWindow::on_eng_2_clicked()
-{
-    QDate selectedDate = ui->calendarWidget->selectedDate();
-    QString startTimeStr = ui->start->time().toString("hh:mm");
-    QString finishTimeStr = ui->finish->time().toString("hh:mm");
-    int mid = ui->idsup->currentText().toInt();
-    QSqlQuery query;
-
-    // Select the record to check if it exists
-    query.prepare("SELECT * FROM GESTION_EMPLOYÉ WHERE id = :id");
-    query.bindValue(":id", mid);
-
-    if (query.exec() && query.next()) {
-        // Prepare and execute the SQL query
-        query.prepare("UPDATE GESTION_EMPLOYÉ SET CALENDAR = :CALENDAR, STARTK = :STARTK, FINISHK = :FINISHK WHERE ID = :ID");
-        query.bindValue(":ID", mid);
-        query.bindValue(":CALENDAR",selectedDate);
-        query.bindValue(":STARTK", startTimeStr);
-        query.bindValue(":FINISHK", finishTimeStr);
-
-        if (query.exec()) {
-            QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr("Record updated.\nClick Cancel to exit."), QMessageBox::Cancel);
-        } else {
-            QMessageBox::warning(nullptr, QObject::tr("Error"), QObject::tr("Failed to update record."), QMessageBox::Cancel);
-        }
-    } else {
-        QMessageBox::warning(nullptr, QObject::tr("Error"), QObject::tr("Record not found."), QMessageBox::Cancel);
-    }
-}
 
 void MainWindow::on_return_4_clicked()
 {
@@ -737,6 +778,7 @@ void MainWindow::on_pushButton_5_clicked()
 {
     ui->base->hide();
     ui->tempss->show();
+
 }
 
 void MainWindow::afficherchat()
@@ -775,3 +817,10 @@ void MainWindow::on_sendmsg_editingFinished()
                         }
                         afficherchat();
 }
+
+/*void MainWindow::on_calendarWidget_clicked(const QDate &date)
+{
+    if(date.day()==8 )
+     {
+        }
+}*/

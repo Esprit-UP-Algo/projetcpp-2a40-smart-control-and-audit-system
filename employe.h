@@ -8,7 +8,7 @@ class Employe
 {
 public:
     Employe();
-    Employe(int,QString,QString,QDate,QString,QString,QString,QString,QDate,QDate);
+    Employe(int,QString,QString,QDate,QString,QString,QString,QString,QDate,QDate,QString);
     int getid();
     QString getnom();
     QString getprenom();
@@ -35,7 +35,7 @@ public:
     QSqlQueryModel* afficher();
     bool modifier(int);
 private:
-    QString nom,prenom,email,poste,sexe,numero_telephone ;
+    QString nom,prenom,email,poste,sexe,numero_telephone,image ;
     int id;
     QDate date_embauche,date_naissance,fin_contrat;
 };

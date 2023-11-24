@@ -926,6 +926,52 @@ background-image : url(C:/Users/MSI/Downloads/return.png);
       <string/>
      </property>
     </widget>
+    <widget class="QPushButton" name="pushButtonOpenImage">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>240</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+     <property name="text">
+      <string>choose image</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="image">
+     <property name="geometry">
+      <rect>
+       <x>1010</x>
+       <y>170</y>
+       <width>191</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_image">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>180</y>
+       <width>113</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;
+background:none;</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="chat">
     <property name="geometry">
@@ -1014,82 +1060,12 @@ background-image : url(C:/Users/MSI/Downloads/return.png);
       <rect>
        <x>560</x>
        <y>280</y>
-       <width>481</width>
-       <height>281</height>
+       <width>431</width>
+       <height>231</height>
       </rect>
      </property>
      <property name="styleSheet">
       <string notr="true">background:none;</string>
-     </property>
-    </widget>
-    <widget class="QTimeEdit" name="start">
-     <property name="geometry">
-      <rect>
-       <x>590</x>
-       <y>580</y>
-       <width>181</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background:none;</string>
-     </property>
-    </widget>
-    <widget class="QTimeEdit" name="finish">
-     <property name="geometry">
-      <rect>
-       <x>800</x>
-       <y>580</y>
-       <width>181</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background:none;</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="eng_2">
-     <property name="geometry">
-      <rect>
-       <x>680</x>
-       <y>660</y>
-       <width>231</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Arial</family>
-       <pointsize>-1</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">
-QPushButton
-{
-	background:none;
-	text-align: center;
-    padding-left:10px;
-	border-radius: 10px;
-    
-	background-color :  rgba(189, 76, 224, 1);
-color:#fff;
-    font-family: Arial, sans-serif; 
-    font-size: 20px;
-    font-weight: bold; 
-} 
-QPushButton:hover
-{
-	border : 2px solid  rgba(189, 76, 224, 1);	
-	background-color: rgba(84, 16, 149, 1);
-
-}
-</string>
-     </property>
-     <property name="text">
-      <string>Enregistrer</string>
      </property>
     </widget>
     <widget class="QPushButton" name="return_4">
@@ -1110,11 +1086,35 @@ background-image : url(C:/Users/MSI/Downloads/return.png);
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>530</y>
+       <width>351</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;
+border-radius: 10px;
+color: #D8D8D8;
+font-family: Inter;
+font-size: 20px;
+font-style: normal;
+font-weight: 800;
+line-height: 23px; /* 115% */
+background: none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
-   <zorder>ajout</zorder>
    <zorder>chat</zorder>
-   <zorder>tempss</zorder>
    <zorder>base</zorder>
+   <zorder>tempss</zorder>
+   <zorder>ajout</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
