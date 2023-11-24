@@ -18,9 +18,10 @@ Entreprise::Entreprise()
     adresse="";
     reception_de_la_demande="";
     etat="";
+    numero="";
 
 }
-Entreprise::Entreprise(int id,QString nom,QString email,QString specialite,QString adresse,QString reception_de_la_demande,QString etat)
+Entreprise::Entreprise(int id,QString nom,QString email,QString specialite,QString adresse,QString reception_de_la_demande,QString etat,QString numero)
 {
     this->id=id;
     this->nom=nom;
@@ -29,6 +30,7 @@ Entreprise::Entreprise(int id,QString nom,QString email,QString specialite,QStri
     this->adresse=adresse;
     this->reception_de_la_demande=reception_de_la_demande;
     this->etat=etat;
+    this->numero=numero;
 }
 int Entreprise::getid()
 {
@@ -58,6 +60,10 @@ QString Entreprise::getetat()
 {
     return etat;
 }
+QString Entreprise::getnumero()
+{
+    return numero;
+}
 void Entreprise::setid(int id)
 {
     this->id=id;
@@ -86,6 +92,10 @@ void Entreprise::setetat(QString etat)
 {
     this->etat=etat;
 }
+void Entreprise::setnumero(QString numero)
+{
+    this->numero=numero;
+}
 /*void Entreprise::setetat(const QString& etat)
 {
     this->etat = etat;
@@ -94,8 +104,8 @@ bool Entreprise::ajouter()
 {
     QSqlQuery query;
     QString id_string = QString::number(id);
-    query.prepare("INSERT INTO ENTREPRISE (id, nom, email, specialite, adresse, reception_de_la_demande, etat) "
-                  "VALUES (:id, :forename, :mail, :speciality, :adress, :recep, :etati)");
+    query.prepare("INSERT INTO ENTREPRISE (id, nom, email, specialite, adresse, reception_de_la_demande, etat,numero) "
+                  "VALUES (:id, :forename, :mail, :speciality, :adress, :recep, :etati, :num)");
     query.bindValue(":id", id_string);
     query.bindValue(":forename", nom);
     query.bindValue(":mail", email);
@@ -103,6 +113,7 @@ bool Entreprise::ajouter()
     query.bindValue(":adress", adresse);
     query.bindValue(":recep", reception_de_la_demande);
     query.bindValue(":etati", etat);
+    query.bindValue(":num", numero);
     /*ui->l_etate->addItem("Accréditée");
     ui->l_etate->addItem("Non accréditée ");*/
     return query.exec();
@@ -122,12 +133,13 @@ QSqlQueryModel *Entreprise::afficher()
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("specialité"));
     model->setHeaderData(3, Qt::Horizontal, QObject::tr("etat"));
+    //model->setHeaderData(4, Qt::Horizontal, QObject::tr("numero"));
     return model;
 }
 bool Entreprise::modi(int nid)
 {
     QSqlQuery query;
-    query.prepare("UPDATE Entreprise SET nom=:nom, email=:email, specialite=:specialite,  adresse=:adresse, reception_de_la_demande=:reception, etat=:etat WHERE id=:id");
+    query.prepare("UPDATE Entreprise SET nom=:nom, email=:email, specialite=:specialite,  adresse=:adresse, reception_de_la_demande=:reception, etat=:etat, numero=:numero WHERE id=:id");
             query.bindValue(":id",nid);
             query.bindValue(":nom",nom);
             query.bindValue(":email",email);
@@ -135,13 +147,14 @@ bool Entreprise::modi(int nid)
             query.bindValue(":adresse",adresse);
             query.bindValue(":reception",reception_de_la_demande);
             query.bindValue(":etat",etat);
+             query.bindValue(":numero",numero);
             return query.exec();
 
 }
 bool Entreprise::modifier()
 {
     QSqlQuery query;
-    query.prepare("UPDATE Entreprise SET nom=:nom, email=:email, specialite=:specialite,  adresse=:adresse, reception_de_la_demande=:reception, etat=:etat WHERE id=:id");
+    query.prepare("UPDATE Entreprise SET nom=:nom, email=:email, specialite=:specialite,  adresse=:adresse, reception_de_la_demande=:reception, etat=:etat, numero=:numero WHERE id=:id");
             query.bindValue(":id",id);
             query.bindValue(":nom",nom);
             query.bindValue(":email",email);
@@ -149,6 +162,7 @@ bool Entreprise::modifier()
             query.bindValue(":adresse",adresse);
             query.bindValue(":reception",reception_de_la_demande);
             query.bindValue(":etat",etat);
+            query.bindValue(":numero",numero);
             return query.exec();
 
 }
@@ -179,35 +193,4 @@ Entreprise Entreprise::chercherParId(int id)
 
     return entreprise;
 }
-/*QString Entreprise::obtenirStatistiques()
-{
-    QString statistiques;
 
-    // Effectuer la requête SQL pour obtenir les statistiques
-    QString queryStr = "SELECT etat, COUNT(*) FROM Entreprise GROUP BY etat";
-    QSqlQuery query;
-    if (!query.exec(queryStr)) {
-        statistiques = "Erreur lors de l'exécution de la requête : " + query.lastError().text();
-    } else {
-        QPieSeries *series = new QPieSeries();
-
-        while (query.next()) {
-            QString etat = query.value(0).toString();
-            int count = query.value(1).toInt();
-            series->append(etat, count);
-        }
-
-        QChart *chart = new QChart();
-        chart->addSeries(series);
-        chart->setTitle("Statistiques des entreprises par état");
-
-        // Créer le widget de diagramme circulaire et l'afficher
-        QChartView *chartView = new QChartView(chart);
-        chartView->setRenderHint(QPainter::Antialiasing);
-
-        chartView->resize(400, 300); // Définir la taille du widget de diagramme circulaire
-        chartView->show();
-    }
-
-    return statistiques;
-}*/
