@@ -34,23 +34,41 @@
 #include <QDateTime>
 #include <QFile>
 #include <QTextStream>
+#include <Windows.h>
+#include <QDesktopServices>
+#include <QUrl>
+
 using namespace  std;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+     setWindowFlags(Qt::CustomizeWindowHint);
     ui->bt_historique->hide();
+
+
     //connect arduino
     arduino a;
-    int ret=a.connect_arduino();
-        switch(ret)
-        {case(0):qDebug()<<"arduino est disponible et connecter sur :"<<a.getarduino_port_name();
+    int ret = a.connect_arduino();
+
+    switch (ret) {
+        case 0:
+            qDebug() << "Arduino is available and connected on:" << a.getarduino_port_name();
             break;
-         case(1):qDebug()<<"arduino est disponible mais il n est pas connecter sur:"<<a.getarduino_port_name();
+        case 1:
+            qDebug() << "Arduino is available but not connected on:" << a.getarduino_port_name();
             break;
-         case(-1):qDebug()<<"arduino n est pas disponible";
-        }
+        case -1:
+            qDebug() << "Arduino is not available";
+            break;
+    }
+
+
+
+    // Show a message on the LCD
+    QString message = "Welcome to my program!";
+    a.show_message_on_lcd(message);
     //login
     ui->login_email->setClearButtonEnabled(true);
       ui->login_mdp->setClearButtonEnabled(true);
@@ -208,6 +226,7 @@ ui->mannuler->setStyleSheet(css_btn);
 
 
 STATISTIQUE();
+on_notification_system();
 }
 
 
@@ -448,7 +467,7 @@ void MainWindow::on_login_connecter_clicked()
      QString password = ui->login_mdp->text();
 
      QSqlQuery query;
-     query.prepare("SELECT * FROM compte WHERE IDP = :email");
+     query.prepare("SELECT * FROM EMPLOYE WHERE EMAIL = :email");
      query.bindValue(":email", email);
 
      if (query.exec() && query.next()) {
@@ -456,11 +475,11 @@ void MainWindow::on_login_connecter_clicked()
          QString storedPassword = query.value("MDP").toString();
          if (password == storedPassword) {
 
-             query.prepare("SELECT ROLE FROM COMPTE WHERE IDP = :IDP");
-             query.bindValue(":IDP", email);
+             query.prepare("SELECT POSTE FROM EMPLOYE WHERE EMAIL = :email");
+             query.bindValue(":email", email);
 
              if (query.exec() && query.next())
-             f.setROLE ( query.value("ROLE").toString());
+             f.setROLE ( query.value("POSTE").toString());
              ui->login_email->clear();
              ui->login_mdp->clear();
              ui->login->hide();
@@ -529,51 +548,85 @@ void MainWindow::on_login_show_clicked()
     ui->login_mdp->setEchoMode(QLineEdit::Password);
 }
 
+
+
 void MainWindow::on_PDF_clicked()
 {
+    QString strStream;
+    QTextStream out(&strStream);
 
+    const int rowCount = ui->tableView->model()->rowCount();
+    const int columnCount = ui->tableView->model()->columnCount();
 
-    // Associez le modèle à votre QTableView
+    out << "<html>\n"
+           "<head>\n"
+           "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+           "<title>%1</title>\n"
+           "<style>\n"
+           "table {\n"
+           "    width: 100%;\n"
+           "    border-collapse: collapse;\n"
+           "}\n"
+           "th, td {\n"
+           "    padding: 8px;\n"
+           "    text-align: left;\n"
+           "    border-bottom: 1px solid #ddd;\n"
+           "}\n"
+           "tr:nth-child(even) {\n"
+           "    background-color: #f2f2f2;\n"
+           "}\n"
+           "</style>\n"
+           "</head>\n"
+           "<body bgcolor=#ffffff link=#5000A0>\n"
+           "<center> <H1>Liste des Formations</H1></center><br/><br/>\n"
+           "<table>\n";
 
-    QSqlQueryModel *model = qobject_cast<QSqlQueryModel*>(ui->tableView->model());
-
-    if (model) {
-        QString content;
-        //header
-        for (int col = 0; col < model->columnCount(); ++col) {
-
-             content += model->headerData(col, Qt::Horizontal).toString() + "\t ";
-
-                }
-        content += "\n";
-        // Parcourez les données du modèle et ajoutez-les au contenu
-        for (int row = 0; row < model->rowCount(); ++row) {
-            for (int col = 0; col < model->columnCount(); ++col) {
-                content += model->data(model->index(row, col)).toString() + "\t";
-            }
-            content += "\n";
-        }
-
-        // Créez un objet QTextDocument et définissez son contenu
-        QTextDocument document;
-        document.setPlainText(content);
-
-        // Créez un dialogue pour sélectionner l'emplacement de sauvegarde du PDF.
-        QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "C:/Users/MSI/formation", "Fichiers PDF (*.pdf)");
-
-        if (!fileName.isEmpty()) {
-            // Créez un objet QPrinter pour générer le PDF.
-            QPrinter printer;
-            printer.setOutputFormat(QPrinter::PdfFormat);
-            printer.setOutputFileName(fileName);
-
-            // Imprimez le document sur le PDF.
-            document.print(&printer);
-
-            // Affichez un message à l'utilisateur pour confirmer l'exportation réussie.
-            QMessageBox::information(this, "Export PDF", "Le PDF a été créé avec succès.");
+    // headers
+    out << "<thead><tr bgcolor=#f0f0f0> <th>Numero</th>";
+    for (int column = 0; column < columnCount; column++)
+    {
+        if (!ui->tableView->isColumnHidden(column))
+        {
+            out << QString("<th>%1</th>").arg(ui->tableView->model()->headerData(column, Qt::Horizontal).toString());
         }
     }
+    out << "</tr></thead>\n";
+
+    // data table
+    for (int row = 0; row < rowCount; row++)
+    {
+        out << "<tr> <td>" << row + 1 << "</td>";
+        for (int column = 0; column < columnCount; column++)
+        {
+            if (!ui->tableView->isColumnHidden(column))
+            {
+                QString data = ui->tableView->model()->data(ui->tableView->model()->index(row, column)).toString().simplified();
+                out << QString("<td>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+            }
+        }
+        out << "</tr>\n";
+    }
+
+    out << "</table>\n"
+           "<br/><br/><center><img src=\"C:/Users/Msi/Downloads/logo pdf.png\"></center>\n" // Add the logo image tag here
+           "</body>\n"
+           "</html>\n";
+
+    QString fileName = QFileDialog::getSaveFileName((QWidget *)0, "Sauvegarder en PDF", QString(), "*.pdf");
+    if (QFileInfo(fileName).suffix().isEmpty())
+    {
+        fileName.append(".pdf");
+    }
+
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setPaperSize(QPrinter::A4);
+    printer.setOutputFileName(fileName);
+
+    QTextDocument doc;
+    doc.setHtml(strStream);
+    doc.setPageSize(printer.pageRect().size()); // This is necessary if you want to hide the page number
+    doc.print(&printer);
 }
 int MainWindow::countType(const QString& type)
 {
@@ -973,11 +1026,94 @@ void MainWindow::Notification()
         ui->notif_bar->setText("No upcoming formations");
     }
 }
+QString MainWindow::Message_Notification()
+{
+    QString message;
 
+    QSqlQuery query;
+    query.exec("SELECT DATE_DE_DEBUT, FORMATEUR FROM formation WHERE DATE_DE_DEBUT >= CURRENT_DATE ORDER BY DATE_DE_DEBUT ASC");
+
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+
+    QDateTime closestDateTime;
+    QString closestFormateur;
+    QList<QDateTime> formationDateTimes;
+    while (query.next()) {
+        QDateTime formationDateTime = query.value(0).toDateTime();
+        QString formateur = query.value(1).toString();
+        if (formationDateTime.isValid() && !formateur.isEmpty()) {
+            formationDateTimes.append(formationDateTime);
+            if (closestDateTime.isNull() || formationDateTime < closestDateTime) {
+                closestDateTime = formationDateTime;
+                closestFormateur = formateur;
+            }
+        }
+    }
+
+    if (!formationDateTimes.isEmpty()) {
+        QDate currentDate = currentDateTime.date();
+        QDate closestDate = closestDateTime.date();
+        int daysLeft = currentDate.daysTo(closestDate);
+
+        if (daysLeft > 0) {
+            message = "Il reste encore " + QString::number(daysLeft) + " jours avant la formation de " + closestFormateur;
+        } else {
+            message = "La formation de " + closestFormateur + " est aujourd'hui.";
+        }
+    } else {
+        message = "No upcoming formations";
+    }
+
+    return message;
+}
 
 
 void MainWindow::on_creer_return_clicked()
 {
     ui->creer->hide();
     ui->login->show();
+}
+
+
+    void MainWindow::on_notification_system()
+    {
+        // Show a message box as a notification
+       // QMessageBox::information(this, "Notification", "Button pressed!");
+
+QString message = Message_Notification();
+        // Send a Windows notification
+        NOTIFYICONDATA nid;
+        ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
+
+        nid.cbSize = sizeof(NOTIFYICONDATA);
+        nid.hWnd = reinterpret_cast<HWND>(this->winId());
+        nid.uID = 1;  // Unique ID for the notification icon
+        nid.uFlags = NIF_INFO;
+        nid.dwInfoFlags = NIIF_INFO;
+        nid.uTimeout = 3000;  // Display time in milliseconds
+
+        wcscpy_s(nid.szInfoTitle, L"Notification"); 
+        wcscpy_s(nid.szInfo, message.toStdWString().c_str());
+
+        Shell_NotifyIcon(NIM_ADD, &nid);
+        Shell_NotifyIcon(NIM_DELETE, &nid);
+    }
+
+
+void MainWindow::on_QUITTER_clicked()
+{
+    close();
+}
+
+void MainWindow::on_FULLSCREEN_clicked()
+{
+    showFullScreen();
+}
+
+
+
+void MainWindow::on_yt_clicked()
+{
+    QUrl youtubeUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    QDesktopServices::openUrl(youtubeUrl);
 }
