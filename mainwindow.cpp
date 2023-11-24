@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "arduino.h"
 #include<QSqlQuery>
 #include <QPainter>
 #include <QPrinter>
@@ -14,11 +15,13 @@
 #include "email.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
-#include <QtLocation/QGeoServiceProvider>
-#include <QtLocation/QGeoCodingManager>
 #include <QtWidgets/QLineEdit>
 #include <QLineEdit>
-//#include <QWebEngineView>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QUrlQuery>
+#include"twiliomanager.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -31,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
      ui->group_email->hide();
     ui->modifier_entreprise->hide();
     ui->localisation->hide();
+    ui->sms->hide();
 
 ui->table_entreprise->setModel(e.afficher());
 connect(ui->mod_id, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::on_mid_currentIndexChanged);
@@ -70,9 +74,20 @@ QString cssbtn="QPushButton"
     "background-color: rgba(84, 16, 149, 1);"
 
 "}";
+//connect arduino
+    arduino a;
+    int ret=a.connect_arduino();
+        switch(ret)
+        {case(0):qDebug()<<"arduino est disponible et connecter sur :"<<a.getarduino_port_name();
+            break;
+         case(1):qDebug()<<"arduino est disponible mais il n est pas connecter sur:"<<a.getarduino_port_name();
+            break;
+         case(-1):qDebug()<<"arduino n est pas disponible";
+        }
 
     ui->l_id->setStyleSheet(css);
     ui->l_nom->setStyleSheet(css);
+     ui->l_numero->setStyleSheet(css);
     //ui->modifier->setStyleSheet(cssbtn);
     ui->l_etate->setStyleSheet(css);
      ui->email_id->setStyleSheet(css);
@@ -81,9 +96,13 @@ QString cssbtn="QPushButton"
     ui->l_adresse->setStyleSheet(css);
     ui->l_reception->setStyleSheet(css);
     ui->l_chercher->setStyleSheet(css);
+    ui->sms_body->setStyleSheet(css);
+    ui->sms_nom->setStyleSheet(css);
+    ui->sms_numero->setStyleSheet(css);
     ui->localisation_nom->setStyleSheet(css);
     ui->chercher->setStyleSheet(cssbtn);
-
+ui->sms_annuler->setStyleSheet(cssbtn);
+ui->sms_envoyer->setStyleSheet(cssbtn);
    // ui->ajouter->setStyleSheet(cssbtn);
     ui->supprimer->setStyleSheet(cssbtn);
     ui->modifier_btn->setStyleSheet(cssbtn);
@@ -96,9 +115,10 @@ QString cssbtn="QPushButton"
      ui->annuler_email->setStyleSheet(cssbtn);
       ui->envoyer->setStyleSheet(cssbtn);
     ui->mod_annuler->setStyleSheet(cssbtn);
-   // ui->mod_id->setStyleSheet(css);
+   ui->mod_id->setStyleSheet(css);
     ui->mod_nom->setStyleSheet(css);
     ui->mod_email->setStyleSheet(css);
+    ui->mod_numero->setStyleSheet(css);
     ui->mod_specialite->setStyleSheet(css);
     ui->mod_adresse->setStyleSheet(css);
     ui->mod_reception->setStyleSheet(css);
@@ -182,6 +202,7 @@ void MainWindow::on_enregistrer_clicked()
         QString adresse = ui->l_adresse->text();
         QString reception_de_la_demande = ui->l_reception->currentText();
         QString etat = ui->l_etate->currentText();
+        QString numero = ui->l_numero->text();
 
         // Vérifier si tous les champs sont remplis
         if (idString.isEmpty() || nom.isEmpty() || email.isEmpty() || adresse.isEmpty())
@@ -207,9 +228,16 @@ void MainWindow::on_enregistrer_clicked()
             QMessageBox::critical(nullptr, QObject::tr("Email invalide"), QObject::tr("Le format de l'e-mail est invalide. Veuillez entrer un e-mail valide."), QMessageBox::Cancel);
             return;
         }
+        // Vérifier si le numéro correspond au format requis
+        QRegularExpression regex("^[2|5|7|9]\\d{7}$"); // Expression régulière : commence par 2, 5, 7 ou 9, suivi de 7 chiffres
 
+        if (!regex.match(numero).hasMatch())
+        {
+            QMessageBox::critical(nullptr, QObject::tr("Numéro invalide"), QObject::tr("Le numéro doit contenir 8 chiffres et commencer par 2, 5, 7 ou 9."), QMessageBox::Cancel);
+            return;
+        }
         // Créer l'objet Entreprise avec les valeurs saisies
-        Entreprise e(id, nom, email, specialite, adresse, reception_de_la_demande, etat);
+        Entreprise e(id, nom, email, specialite, adresse, reception_de_la_demande, etat, numero);
 
         // Effectuer l'ajout de l'entreprise
         bool test = e.ajouter();
@@ -221,6 +249,7 @@ void MainWindow::on_enregistrer_clicked()
             ui->l_id->clear();
             ui->l_nom->clear();
             ui->l_email->clear();
+            ui->l_numero->clear();
             ui->l_specialite->setCurrentIndex(0);
             ui->l_adresse->clear();
             ui->l_reception->setCurrentIndex(0);
@@ -294,6 +323,7 @@ void MainWindow::on_annuler_clicked()
     ui->l_id->clear();
     ui->l_nom->clear();
     ui->l_email->clear();
+     ui->l_numero->clear();
     ui->l_specialite->setCurrentIndex(0);
     ui->l_adresse->clear();
     ui->l_reception->setCurrentIndex(0);
@@ -326,23 +356,6 @@ void MainWindow::on_trier_clicked()
 {
     ui->table_entreprise->setModel(e.tri());
 }
-
-/*void MainWindow::on_chercher_clicked()
-{
-    QString idPrefix = ui->l_chercher->text();
-
-       QSqlQueryModel* model = new QSqlQueryModel();
-       model->setQuery(QString("SELECT id, nom, specialite, etat FROM entreprise WHERE id LIKE '%1%'").arg(idPrefix));
-       model->setHeaderData(0, Qt::Horizontal, QObject::tr("id"));
-       model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
-       model->setHeaderData(2, Qt::Horizontal, QObject::tr("specialité"));
-       model->setHeaderData(3, Qt::Horizontal, QObject::tr("etat"));
-
-       // Afficher les résultats dans le QTableView
-       ui->table_entreprise->setModel(model);
-       ui->table_entreprise->resizeColumnsToContents();
-}*/
-
 void MainWindow::on_refresh_clicked()
 {
     ui->table_entreprise->setModel(e.afficher());
@@ -400,10 +413,12 @@ void MainWindow::updateUI(int selectedId)
         QString adresse = query.value(4).toString();
         QString reception = query.value(5).toString();
         QString etat = query.value(6).toString();
+        QString numero = query.value(7).toString();
 
 
         // Update the UI elements with the retrieved data
         ui->mod_nom->setText(nom);
+         ui->mod_numero->setText(numero);
         ui->mod_email->setText(email);
         qDebug()<<"Etat: "<<etat;
 
@@ -433,6 +448,7 @@ void MainWindow::on_mod_enregistrer_clicked()
     QString email = ui->mod_email->text();
     QString specialite = ui->mod_specialite->currentText();
     QString adresse = ui->mod_adresse->text();
+    QString numero = ui->mod_numero->text();
     QString reception_de_la_demande = ui->mod_reception->currentText();
     QString etat = ui->mod_etat->currentText();
 
@@ -442,7 +458,14 @@ void MainWindow::on_mod_enregistrer_clicked()
         QMessageBox::critical(nullptr, QObject::tr("Champs manquants"), QObject::tr("Veuillez remplir tous les champs."), QMessageBox::Cancel);
         return;
     }
+    // Vérifier si le numéro correspond au format requis
+    QRegularExpression regex("^[2|5|7|9]\\d{7}$"); // Expression régulière : commence par 2, 5, 7 ou 9, suivi de 7 chiffres
 
+    if (!regex.match(numero).hasMatch())
+    {
+        QMessageBox::critical(nullptr, QObject::tr("Numéro invalide"), QObject::tr("Le numéro doit contenir 8 chiffres et commencer par 2, 5, 7 ou 9."), QMessageBox::Cancel);
+        return;
+    }
     // Vérifier si l'ID est valide
     bool isIdValid = false;
     int id = idString.toInt(&isIdValid);
@@ -462,7 +485,7 @@ void MainWindow::on_mod_enregistrer_clicked()
     }
 
     // Créer l'objet Entreprise avec les valeurs saisies
-    Entreprise e(id, nom, email, specialite, adresse, reception_de_la_demande, etat);
+    Entreprise e(id, nom, email, specialite, adresse, reception_de_la_demande, etat, numero);
 
     // Effectuer l'ajout de l'entreprise
        ui->supprimer_2->clear();
@@ -603,71 +626,7 @@ void MainWindow::on_texte_recherche_textChanged(const QString &text)
 
 
 
-/*void MainWindow::on_localisation_btn_clicked()
-{
-    ui->localisation->show();
-    ui->groupBox->hide();
-    // Effectuer l'ajout de l'entreprise
-       ui->localisation_nom->clear();
-       QSqlQuery query;
-       query.exec("SELECT nom FROM Entreprise");
 
-       // Populate the combobox with data from the database
-       while (query.next()) {
-           QString nom = query.value(0).toString(); // Utiliser toString() pour récupérer une valeur QString
-           ui->localisation_nom->addItem(nom);
-       }*/
-   /* QWebEngineView *carteView = new QWebEngineView(ui->carteWidget);
-    carteView->load(QUrl(urlCarte));
-    QString nomEntreprise = ui->localisation_nom->currentText();
-
-        QSqlQuery query;
-        query.prepare("SELECT adresse FROM Entreprise WHERE nom = ?");
-        query.addBindValue(nomEntreprise);
-        if (!query.exec()) {
-            QMessageBox::critical(this, "Erreur", "Erreur lors de l'exécution de la requête : " + query.lastError().text());
-            return;
-        }
-        if (query.next()) {
-            QString adresse = query.value(0).toString();
-
-            // Effectuer la géocodage de l'adresse pour obtenir les coordonnées géographiques
-            QString apiKey = "VOTRE_CLE_API";
-            QString url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + QUrl::toPercentEncoding(adresse) + "&key=" + apiKey;
-            QNetworkAccessManager *manager = new QNetworkAccessManager(this); // Utilisation d'un pointeur pour allouer dynamiquement l'objet
-            QNetworkRequest request(url);
-            QNetworkReply *reply = manager->get(request); // Utilisation de l'opérateur -> pour accéder aux membres de l'objet pointé
-
-            QEventLoop eventLoop;
-            QObject::connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
-            eventLoop.exec();
-
-            if (reply->error() == QNetworkReply::NoError) {
-                QByteArray data = reply->readAll();
-                QJsonDocument jsonDoc(QJsonDocument::fromJson(data));
-                QJsonObject jsonObject = jsonDoc.object();
-
-                if (jsonObject["status"].toString() == "OK") {
-                    QJsonArray results = jsonObject["results"].toArray();
-                    if (!results.isEmpty()) {
-                        QJsonObject location = results[0].toObject()["geometry"].toObject()["location"].toObject();
-                        double latitude = location["lat"].toDouble();
-                        double longitude = location["lng"].toDouble();
-
-                        // Utiliser les coordonnées pour afficher la localisation sur la carte
-                        QString urlCarte = "https://www.google.com/maps?q=" + QString::number(latitude) + "," + QString::number(longitude);
-                        ui->carteWidget->load(QUrl(urlCarte));
-                    }
-                }
-            } else {
-                QMessageBox::critical(this, "Erreur", "Erreur lors de la requête de géocodage : " + reply->errorString());
-            }
-
-            reply->deleteLater();
-            delete manager; // Supprimer l'objet manager alloué dynamiquement
-        }
-
-}*/
 
 void MainWindow::on_retour_local_clicked()
 {
@@ -675,64 +634,7 @@ void MainWindow::on_retour_local_clicked()
     ui->groupBox->show();
 }
 
-/*void MainWindow::on_email_clicked()
-{
-     ui->group_email->show();
-    ui->groupBox->hide();
-    ui->email_id->clear();
-    QSqlQuery query;
-    query.exec("SELECT id FROM Entreprise");
 
-    // Clear the combobox before populating it with data
-    ui->email_id->clear();
-
-    // Populate the combobox with data from the database
-    while (query.next()) {
-        int id = query.value(0).toInt();
-        ui->email_id->addItem(QString::number(id));
-    }
-
-}*/
-
-/*void MainWindow::on_email_clicked()
-{
-    ui->group_email->show();
-    ui->groupBox->hide();
-    ui->email_id->clear();
-
-    QSqlQuery query;
-    query.exec("SELECT id, nom, email FROM Entreprise");
-
-    // Clear the combobox before populating it with data
-    ui->email_id->clear();
-
-    // Populate the combobox with data from the database
-    while (query.next()) {
-        int id = query.value(0).toInt();
-        QString nom = query.value(1).toString();
-        QString email = query.value(2).toString();
-
-        ui->email_id->addItem(QString::number(id));
-    }
-
-    // Connect the currentIndexChanged signal of the combobox to a slot
-    connect(ui->email_id, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
-        if (index >= 0) {
-            // Fetch the selected ID from the combobox
-            int selectedId = ui->email_id->itemText(index).toInt();
-
-            // Fetch the associated attributes from the database based on the selected ID
-            QSqlQuery selectedQuery;
-            selectedQuery.prepare("SELECT nom, email FROM Entreprise WHERE id = ?");
-            selectedQuery.addBindValue(selectedId);
-            if (selectedQuery.exec() && selectedQuery.next()) {
-                // Update the line edits with the fetched attribute values
-                ui->email_nom->setText(selectedQuery.value(0).toString());
-                ui->destinataireEmail->setText(selectedQuery.value(1).toString());
-            }
-        }
-    });
-}*/
 void MainWindow::on_email_clicked()
 {
     ui->group_email->show();
@@ -798,46 +700,154 @@ void MainWindow::on_annuler_email_clicked()
     /*ui->group_email->hide();
     ui->groupBox->show();*/
 }
-void MainWindow::on_localisation_btn_clicked()
+void MainWindow::on_sms_annuler_clicked()
 {
-    ui->localisation->show();
+    ui->sms->hide();
+    ui->groupBox->show();
+}
+
+/*void MainWindow::on_sms_btn_clicked()
+{
+    ui->sms->show();
     ui->groupBox->hide();
-    ui->localisation_nom->clear();
+    ui->email_nom->clear();
     QSqlQuery query;
-    query.exec("SELECT nom, adresse FROM Entreprise");
+    query.exec("SELECT nom, numero FROM Entreprise");
 
     // Clear the combobox before populating it with data
-    ui->localisation_nom->clear();
+    ui->sms_nom->clear();
 
     // Add an empty item to the combobox as the first option
-    ui->localisation_nom->addItem("");
+    ui->sms_nom->addItem("");
 
     // Populate the combobox with data from the database
     while (query.next()) {
         QString nom = query.value(0).toString();
-        QString adresse = query.value(1).toString();
+        QString numero = query.value(1).toString();
 
-        ui->localisation_nom->addItem(nom);
+        ui->sms_nom->addItem(nom);
     }
 
     // Connect the currentIndexChanged signal of the combobox to a slot
-    connect(ui->localisation_nom, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+    connect(ui->sms_nom, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
         if (index > 0) { // Check if an item other than the empty item is selected
             // Fetch the selected name from the combobox
-            QString selectedNom = ui->localisation_nom->itemText(index);
+            QString selectedName = ui->sms_nom->currentText();
 
-            // Fetch the associated address from the database based on the selected name
+            // Fetch the associated attributes from the database based on the selected name
             QSqlQuery selectedQuery;
-            selectedQuery.prepare("SELECT adresse FROM Entreprise WHERE nom = ?");
-            selectedQuery.addBindValue(selectedNom);
+            selectedQuery.prepare("SELECT numero FROM Entreprise WHERE nom = ?");
+            selectedQuery.addBindValue(selectedName);
             if (selectedQuery.exec() && selectedQuery.next()) {
-                // Update the line edit with the fetched address value
-                ui->localisation_adresse->setText(selectedQuery.value(0).toString());
+                // Update the line edit with the fetched attribute value
+                ui->sms_numero->setText(selectedQuery.value(0).toString());
             }
         } else {
             // If the empty item is selected, clear the line edit
-            ui->localisation_adresse->clear();
+            ui->sms_numero->clear();
         }
     });
+}*/
+
+
+void MainWindow::on_sms_btn_clicked()
+{
+    ui->sms->show();
+    ui->groupBox->hide();
+    ui->sms_nom->clear();
+
+    QSqlQuery query;
+    query.exec("SELECT nom, numero FROM Entreprise");
+
+    // Clear the combobox before populating it with data
+    ui->sms_nom->clear();
+
+    // Add an empty item to the combobox as the first option
+    ui->sms_nom->addItem("");
+
+    // Populate the combobox with data from the database
+    while (query.next()) {
+        QString nom = query.value(0).toString();
+        QString numero = query.value(1).toString();
+
+        ui->sms_nom->addItem(nom);
+    }
+
+    // Connect the currentIndexChanged signal of the combobox to a slot
+    connect(ui->sms_nom, QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+        if (index > 0) { // Check if an item other than the empty item is selected
+            // Fetch the selected name from the combobox
+            QString selectedName = ui->sms_nom->currentText();
+
+            // Fetch the associated attributes from the database based on the selected name
+            QSqlQuery selectedQuery;
+            selectedQuery.prepare("SELECT numero FROM Entreprise WHERE nom = ?");
+            selectedQuery.addBindValue(selectedName);
+            if (selectedQuery.exec() && selectedQuery.next()) {
+                // Update the line edit with the fetched attribute value
+                ui->sms_numero->setText(selectedQuery.value(0).toString());
+            }
+        } else {
+            // If the empty item is selected, clear the line edit
+            ui->sms_numero->clear();
+        }
+    });
+
 }
+
+void MainWindow::on_sms_envoyer_clicked()
+{
+    qDebug()<<"sms 1";
+    TwilioManager sms;
+    sms.sendSMS(ui->sms_body->text());
+     qDebug()<<"sms 2";
+}
+
+/*void MainWindow::on_sms_envoyer_clicked()
+{
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+        QNetworkRequest request(QUrl("https://api.twilio.com/2010-04-01/Accounts/AC2a40f57200807ece9911a66498d233e1/Messages.json"));
+
+        // Set up headers and authentication
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+        QString credentials = "AC2a40f57200807ece9911a66498d233e1:e81bbb24ed9b4c8aed97d2f3a0550406";
+        QString base64Credentials = QString(credentials.toUtf8().toBase64());
+        request.setRawHeader("Authorization", "Basic " + base64Credentials.toUtf8());
+
+        // Prepare POST data
+        QUrlQuery params;
+        params.addQueryItem("To", "+21655475804");
+        params.addQueryItem("From", "+12672974846");
+        params.addQueryItem("Body", "Hello from Qt!");
+        QByteArray postData = params.query().toUtf8();
+        // Before sending the request
+        qDebug() << "Request URL:" << request.url().toString();
+        qDebug() << "Request Headers:" << request.rawHeaderList();
+        qDebug() << "Request Body:" << postData;
+
+
+        // Send the request
+        QNetworkReply *reply = manager->post(request, postData);
+
+        // Connect to the finished signal
+        connect(reply, &QNetworkReply::finished, this, [=]() {
+            if (reply->error() == QNetworkReply::NoError) {
+                QString response = QString::fromUtf8(reply->readAll());
+                // Log the full response
+                           qDebug() << "Response Headers:" << reply->rawHeaderList();
+                           qDebug() << "Response Body:" << reply->readAll();
+
+                           qDebug() << "Success!";
+            } else {
+                qDebug() << "Error:" << reply->errorString();
+
+                           // Log the full error response
+                           qDebug() << "Response Headers:" << reply->rawHeaderList();
+                           qDebug() << "Response Body:" << reply->readAll();
+            }
+            reply->deleteLater();
+        });
+
+    }*/
+
 
