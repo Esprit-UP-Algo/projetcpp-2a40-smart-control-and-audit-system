@@ -14,6 +14,7 @@ Notepad::Notepad(Ui::MainWindow *ui, QWidget *parent)
     connect(ui->pushButton_enregister_sous, &QPushButton::clicked, this,  &Notepad::enregistrer_sous);
     connect(ui->Notepad_Undo, &QPushButton::clicked, this,  &Notepad::Undo);
     connect(ui->pushButton_Ecrire, &QPushButton::clicked, this,  &Notepad::ecrire);
+   // connect(ui->fontComboBox , &QFontComboBox::currentIndexChanged , this,   &Notepad::setFont);
 
 
 }
@@ -150,3 +151,14 @@ void Notepad::ecrire()
 {
   ui->textEdit->show();
 }
+void Notepad::setFont()
+{
+    bool fontSelected;
+       QFont font = QFontDialog::getFont(&fontSelected, this);
+       if (fontSelected)
+           ui->textEdit->setFont(font);
+}
+
+
+
+

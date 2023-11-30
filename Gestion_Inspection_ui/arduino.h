@@ -10,7 +10,7 @@ public:
     ~arduino();
     int connect_arduino();
     int close_arduino();
-    int write_to_arduino(QByteArray);
+  int write_to_arduino(const QByteArray& data);
     QByteArray read_from_arduino();
     QSerialPort* get_serial(){return serial;}
     QString getarduino_port_name(){return arduino_port_name;}

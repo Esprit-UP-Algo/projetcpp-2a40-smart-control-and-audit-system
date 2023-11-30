@@ -4,6 +4,7 @@
 #include "connection.h"
 #include "openexcel.h"
 #include "notepad.h"
+#include "arduino.h"
 #include <QApplication>
 #include <QMainWindow>
 #include <QDate>
@@ -80,9 +81,34 @@ private slots:
 
     //void on_pushButton_enregistre_notepad_clicked();
 
+  //  void on_fontComboBox_currentFontChanged(const QFont &f);
+
+
+
+    void on_G_Inspection_test_clicked();
+    bool modifier_presence_employe(int id,QString PRECENSE);
+    bool modifier_presence_login(QString admin,QString PRECENSE);
+
+
+    void on_login_connecter_clicked();
+
+    void on_pushButton_TT_clicked();
+
+
+
+    //void on_pushButton_ouvrir_clicked();
+
+    void on_login_hide_clicked();
+
+    void on_login_show_clicked();
+
+
+
 private:
     QLabel * blasa;
     Ui::MainWindow *ui;
+    QByteArray data;
+    arduino A;
      Notepad *notepad;
 
 };

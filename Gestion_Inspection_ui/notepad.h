@@ -10,6 +10,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QWidget>
+#include <QFontDialog>
 #include "ui_mainwindow.h"
 
 class Notepad : public QWidget
@@ -30,10 +31,15 @@ public:
     void affiche();
     void imprimer();
     void ecrire();
+    void setFont();
+
+
 
     QLabel * box_Notepad;
     QString currentFile = "";
     QPushButton * enregistrer_notepad;
+private slots:
+
 };
 
 #endif // NOTEPAD_H

@@ -2,7 +2,6 @@
 #include "notepad.h"
 #include "ui_mainwindow.h"
 #include "sms.h"
-#include "arduino.h"
 #include "inspection.h"
 #include "openexcel.h"
 #include <QDebug>
@@ -23,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 {
 
     ui->setupUi(this);
-    notepad = new Notepad(ui);
+    //notepad = new Notepad(ui);
         arduino a;
         int ret=a.connect_arduino();
             switch(ret)
@@ -36,12 +35,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 
 
     ui->label_32->hide();
+    //ui->login->hide();
     ui->groupBox_Notepad->hide();
     STATISTIQUE();
     ui->groupBox_sms->hide();
     ui->Gestion_Inspection_ajouter->hide();
     ui->groupBox_Modifier->hide();
     ui->gestion_inspection->show();
+    ui->login_email->setStyleSheet("background:transparent;border:none;font-size:20px;color:white");
+    ui->login_mdp->setStyleSheet("background:transparent;border:none;font-size:20px;color:white");
+    ui->login_mdp->setPlaceholderText("Entrez votre mot de passe");
+    ui->login_email->setPlaceholderText("Entrez votre email");
+
+   // ui->label_test->setStyleSheet("background:blue");
+   // QString styleSheet = QString("background: #%1;").arg("47A1FA");
+    //ui->label_test->setStyleSheet(styleSheet);
+    //ui->pushButton_entrer->setStyleSheet("border:2px,;font-size:20px;");
     Inspection i;
   ui->list->setModel(i.afficher());
   ui->G_Inspection_AJOUTER->setStyleSheet("background:transparent;border:none;font-size:20px;color:white");
@@ -695,3 +704,196 @@ void MainWindow::on_pushButton_annuler_m_clicked()
         // Close the file
         file.close();
 }*/
+
+
+
+/*void MainWindow::on_fontComboBox_currentFontChanged(const QFont &f)
+{
+
+}*/
+bool MainWindow::modifier_presence_employe(int id,QString PRECENSE)
+{
+    QSqlQuery query;
+
+
+    query.prepare("UPDATE INSPECTION SET TYPE_MISSION=:ETAT where IDIN=:IDIN");
+    query.bindValue(":IDIN", id);
+    query.bindValue(":ETAT",PRECENSE);
+
+
+
+      if (query.exec()) {
+          // Commit the transaction
+          QSqlDatabase::database().commit();
+          return true;
+      } else {
+          // Rollback the transaction in case of an error
+          QSqlDatabase::database().rollback();
+          return false;
+      }
+}
+
+void MainWindow::on_G_Inspection_test_clicked()
+{
+    arduino a;
+       int x=1;
+       bool test;
+       QString strData = "1";
+       QByteArray data = strData.toUtf8();
+       x=a.write_to_arduino(data);
+       if(x==0)
+       {
+
+   test=modifier_presence_employe(3455," Acomplie");
+   if(test)
+      {
+       QMessageBox::information(nullptr, QObject::tr("OK"), QObject::tr(" Acomplie"), QMessageBox::Cancel);
+   }
+
+       }
+}
+bool MainWindow::modifier_presence_login(QString admin,QString PRECENSE)
+{
+    QSqlQuery query;
+
+
+    query.prepare("UPDATE EMPLOYE SET PRESENCE=:PRECENSE where EMAIL=:admin");
+    query.bindValue(":PRECENSE",PRECENSE);
+    query.bindValue(":admin",admin);
+
+
+      if (query.exec()) {
+          // Commit the transaction
+          QSqlDatabase::database().commit();
+          return true;
+      } else {
+          // Rollback the transaction in case of an error
+          QSqlDatabase::database().rollback();
+          return false;
+      }
+}
+
+
+
+void MainWindow::on_login_connecter_clicked()
+{
+    QString email = ui->login_email->text();
+        QString password = ui->login_mdp->text();
+
+        QSqlQuery query;
+        query.prepare("SELECT * FROM EMPLOYE WHERE EMAIL = :email");
+        query.bindValue(":email", email);
+
+        if (query.exec() && query.next()) {
+
+            QString storedPassword = query.value("MDP").toString();
+            if (password == storedPassword) {
+
+
+                ui->login_email->clear();
+                ui->login_mdp->clear();
+                ui->login->hide();
+                ui->gestion_inspection->show();
+            } else {
+                // Password is incorrect
+                QMessageBox::critical(this, "Error", "Incorrect password");
+            }
+        } else {
+            // User record not found
+            QMessageBox::critical(this, "Error", "Incorrect email");
+        }
+
+}
+
+void MainWindow::on_pushButton_TT_clicked()
+{
+    bool test;
+    int x;
+
+        x=A.write_to_arduino("1");
+        if (x==1) qDebug()<<x<<endl;
+        data=A.read_from_arduino();
+        qDebug()<<"data="<< data;
+        if(data=="0")
+        {
+            ui->login_email->setText("ouiem.zakhama@esprit.tn");
+            ui->login_mdp->setText("Zakhama123");
+            test=modifier_presence_login("ouiem.zakhama@esprit.tn","PRESENT");
+                if(test)
+                   {
+                    QMessageBox msgBox(QMessageBox::Information, QObject::tr("Empreinte avec Succés"), QObject::tr("Empreinte Match \nCliquez sur Annuler pour quitter."), QMessageBox::Cancel);
+                    QString styleSheet = "QMessageBox {"
+                        "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(245, 245, 220, 90%), stop:1 rgba(132,183,164,90%));"
+                        "border: 2px outset grey;"
+                        "}"
+                        "QMessageBox QPushButton {"
+                        "color: rgba(52,90,105,100%);"
+                        "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(245, 245, 220, 90%), stop:1 rgba(132,183,164,90%));"
+                        "border-style: solid;"
+                        "border: 2px solid transparent;"
+                        "border-radius: 5px;"
+                        "padding: 1px;"
+                        "}"
+                        "QMessageBox QPushButton:hover {"
+                        "color: #B200ED ;"
+                        "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(245, 245, 220, 70%));"
+                        "border-style: solid;"
+                        "border: 2px solid transparent;"
+                        "border-radius: 5px;"
+                        "padding: 1px;"
+                        "}";
+
+                    msgBox.setStyleSheet(styleSheet);
+                    msgBox.exec();
+                    //on_pushButton_3_clicked();
+
+                    }
+
+                }
+        else
+        {
+            QMessageBox msgBox(QMessageBox::Warning, QObject::tr(""), QObject::tr("Ne bougez pas votre doit!!!\n."), QMessageBox::Ok);
+            QString styleSheet = "QMessageBox {"
+                "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(245, 245, 220, 90%), stop:1 rgba(132,183,164,90%));"
+                "border: 2px outset grey;"
+                "}"
+                "QMessageBox QPushButton {"
+                "color: rgba(52,90,105,100%);"
+                "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(245, 245, 220, 90%), stop:1 rgba(132,183,164,90%));"
+                "border-style: solid;"
+                "border: 2px solid transparent;"
+                "border-radius: 5px;"
+                "padding: 1px;"
+                "}"
+                "QMessageBox QPushButton:hover {"
+                "color: #B200ED ;"
+                "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(245, 245, 220, 70%));"
+                "border-style: solid;"
+                "border: 2px solid transparent;"
+                "border-radius: 5px;"
+                "padding: 1px;"
+                "}";
+
+            msgBox.setStyleSheet(styleSheet);
+            msgBox.exec();
+        }
+}
+
+
+
+
+void MainWindow::on_login_hide_clicked()
+{
+    ui->login_hide->hide();
+    ui->login_show->show();
+    ui->login_mdp->setEchoMode(QLineEdit::Password);
+}
+
+void MainWindow::on_login_show_clicked()
+{
+    ui->login_hide->show();
+    ui->login_show->hide();
+   ui->login_mdp->setEchoMode(QLineEdit::Normal);
+
+}
+

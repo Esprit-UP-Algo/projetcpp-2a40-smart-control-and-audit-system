@@ -52,30 +52,29 @@ int arduino::close_arduino()
     }
     return 1;
 }
+
 QByteArray arduino::read_from_arduino()
 {
     if(serial->isReadable())
-    {
-        data=serial->readAll();
-        return data;
-    }
-    else
-    {
-            qDebug() << "No data available";
-            return QByteArray();  // Ou une autre valeur par défaut
-        }
+       {
+           data=serial->readAll();
+           return data;
+       }
 }
-int arduino::write_to_arduino(QByteArray d)
+
+int arduino::write_to_arduino(const QByteArray& data)
 {
     if(serial->isWritable())
-    {
-        serial->write(d);
-        return 0;
-    }
-    else
-    {
-            qDebug() << "Je ne peux pas écrire sur le port série";
-            return 1;  // Ou une autre valeur pour indiquer l'échec
-        }
+       {
+
+           serial->write(data);
+        return 1;
+       }
+       else
+       {
+        return -1;
+           qDebug() << "error en ecriture !";
+       }
+
 }
 
