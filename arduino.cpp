@@ -1,38 +1,38 @@
 #include "arduino.h"
-#include<iostream>
 #include <QDebug>
-#include<QtSerialPort>
-using namespace std;
-arduino::arduino()
-{
-    serial = new QSerialPort();
 
-}
-arduino::~arduino()
+Arduino::Arduino()
 {
-    if (serial->isOpen())
-        serial->close();
-    delete serial;
+    data="";
+    arduino_port_name="";
+    arduino_is_available=false;
+    serial=new QSerialPort;
 }
-int arduino::connect_arduino()
+QString Arduino::getarduino_port_name()
 {
-    foreach(const QSerialPortInfo &serial_port_info,QSerialPortInfo::availablePorts())
-    {
-        if(serial_port_info.hasVendorIdentifier() && serial_port_info.hasProductIdentifier())
-        {
-            if(serial_port_info.vendorIdentifier()==arduino_uno_vendor_id && serial_port_info.productIdentifier()==arduino_uno_producy_id)
-            {
-                arduino_is_available=true;
-                arduino_port_name=serial_port_info.portName();
+    return arduino_port_name;
+}
+QSerialPort* Arduino::getserial()
+{
+    return serial;
+}
+
+
+
+int Arduino::connect_arduino()
+{
+    foreach(const QSerialPortInfo &serial_port_info , QSerialPortInfo::availablePorts()){
+        if(serial_port_info.hasVendorIdentifier() && serial_port_info.hasProductIdentifier()){
+            if(serial_port_info.vendorIdentifier() == arduino_uno_vendor_id && serial_port_info.productIdentifier() == arduino_uno_producy_id){
+                arduino_is_available = true;
+                arduino_port_name = serial_port_info.portName();
             }
         }
     }
-    qDebug() << "arduino_port_name is :" << arduino_port_name;
-    if(arduino_is_available)
-    {
+    qDebug() << "arduino_port_name_is :" << arduino_port_name ;
+    if(arduino_is_available){
         serial->setPortName(arduino_port_name);
-        if(serial->open(QSerialPort::ReadWrite))
-        {
+        if(serial->open(QSerialPort::ReadWrite)){
             serial->setBaudRate(QSerialPort::Baud9600);
             serial->setDataBits(QSerialPort::Data8);
             serial->setParity(QSerialPort::NoParity);
@@ -40,42 +40,40 @@ int arduino::connect_arduino()
             serial->setFlowControl(QSerialPort::NoFlowControl);
             return 0;
         }
+        return 1;
     }
-    return 1;
-
+    return -1;
 }
-int arduino::close_arduino()
+
+int Arduino::close_arduino()
 {
     if(serial->isOpen())
-    {serial->close();
+    {
+        serial->close();
         return 0;
     }
     return 1;
 }
-QByteArray arduino::read_from_arduino()
+
+int Arduino::write_to_arduino(QByteArray d)
+{
+    if(serial->isWritable())
+    {
+        serial->write(d);
+
+    }
+    else
+    {
+        qDebug() << "error en ecriture !";
+    }
+}
+
+QByteArray Arduino::read_from_arduino()
 {
     if(serial->isReadable())
     {
         data=serial->readAll();
         return data;
     }
-    else
-    {
-            qDebug() << "No data available";
-            return QByteArray();  // Ou une autre valeur par défaut
-        }
-}
-int arduino::write_to_arduino(QByteArray d)
-{
-    if(serial->isWritable())
-    {
-        serial->write(d);
-        return 0;
-    }
-    else
-    {
-            qDebug() << "Je ne peux pas écrire sur le port série";
-            return 1;  // Ou une autre valeur pour indiquer l'échec
-        }
 }
 
