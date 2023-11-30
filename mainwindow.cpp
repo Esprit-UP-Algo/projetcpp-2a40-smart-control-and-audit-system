@@ -27,6 +27,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    //ARDUINO
+    int ret=A.connect_arduino();
+        switch(ret)
+        {
+        case (0):qDebug()<<"arduino is available and connected to :"<<A.getarduino_port_name();
+            break;
+        case (1):qDebug()<<"arduino is available but not connected to :"<<A.getarduino_port_name();
+            break;
+        case (-1):qDebug()<<"arduino is not avilble ";
+        }
+        QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label()));
     //ui->bouton_menu->setStyleSheet();
      on_stat();
     ui->groupBox->show();
@@ -75,15 +86,7 @@ QString cssbtn="QPushButton"
 
 "}";
 //connect arduino
-    arduino a;
-    int ret=a.connect_arduino();
-        switch(ret)
-        {case(0):qDebug()<<"arduino est disponible et connecter sur :"<<a.getarduino_port_name();
-            break;
-         case(1):qDebug()<<"arduino est disponible mais il n est pas connecter sur:"<<a.getarduino_port_name();
-            break;
-         case(-1):qDebug()<<"arduino n est pas disponible";
-        }
+
 
     ui->l_id->setStyleSheet(css);
     ui->l_nom->setStyleSheet(css);
@@ -850,4 +853,31 @@ void MainWindow::on_sms_envoyer_clicked()
 
     }*/
 
+void MainWindow::update_label()
+{
 
+    data=A.read_from_arduino();
+
+    id=id+data;
+    if(data=="D")
+    {
+        Entreprise e;
+        e=e.chercherParId(id.toInt());
+
+        if(e.getid()==-1)
+        {
+            A.write_to_arduino("0");
+        }
+        else
+        {
+            A.write_to_arduino("1");
+        }
+    }
+    else
+    {
+        ui->l_chercher->setText(ui->l_chercher->text()+data);
+        id=ui->l_chercher->text();
+        qDebug()<<"data="<< id;
+    }
+
+}
