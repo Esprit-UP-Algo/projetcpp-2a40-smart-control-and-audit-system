@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include"entreprise.h"
+#include"arduino.h"
 #include<QMessageBox>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -71,12 +72,15 @@ void on_sms_annuler_clicked();
 void on_sms_btn_clicked();
 
 void on_sms_envoyer_clicked();
-
+void update_label();
 
 private:
     Ui::MainWindow *ui;
     Entreprise e;
     void remplirComboBoxIdEntreprise();
+    QByteArray data;
+    Arduino A;
+    QString id;
 
 };
 #endif // MAINWINDOW_H
