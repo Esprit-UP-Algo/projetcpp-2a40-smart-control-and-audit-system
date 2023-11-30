@@ -14,6 +14,11 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QMap>
+#include <QSerialPort>
+#include <QImage>
+#include "arduino.h"
+#include <QProcess>
+
 
 
 
@@ -43,22 +48,17 @@ private slots:
     bool eventFilter(QObject *obj, QEvent *event);  
     void on_chatt_clicked();
     void on_return_3_clicked();
-
     void on_temps_clicked();
-
     void on_return_4_clicked();
-
     void on_pushButton_5_clicked();
     void afficherchat();
     void on_sendmsg_editingFinished();
     void updateTime();
     void saveEmployeeTime(const QDateTime &startTime, const QDateTime &finishTime);
-    void openImageDialog();
-
-
-
-
-    void on_calendarWidget_clicked(const QDate &date);
+    void openImageDialog();    
+    //void on_calendarWidget_clicked(const QDate &date);
+    /*void openArduino();
+    void arduinoProcessFinished(int exitCode);*/
 
 private:
     Ui::MainWindow *ui;
@@ -77,7 +77,6 @@ private:
     QDateEdit *date1;
     QDateEdit *date2;
     QLineEdit *recherch;
-
 
 };
 #endif // MAINWINDOW_H

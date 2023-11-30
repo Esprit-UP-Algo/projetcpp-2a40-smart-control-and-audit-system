@@ -3,7 +3,9 @@
 #include <QString>
 #include <QDate>
 #include<qsqlquerymodel.h>
+#include <QSqlQueryModel>
 
+class ImageDelegate;
 class Employe
 {
 public:
@@ -34,11 +36,14 @@ public:
     bool supprimer(int);
     QSqlQueryModel* afficher();
     bool modifier(int);
+
 private:
     QString nom,prenom,email,poste,sexe,numero_telephone,image ;
     int id;
     QDate date_embauche,date_naissance,fin_contrat;
 };
+
+
 
 
 #endif // EMPLOYE_H

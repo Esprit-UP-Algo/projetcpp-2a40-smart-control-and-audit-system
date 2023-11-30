@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QHeaderView>
 #include <QTableView>
+#include <QStyledItemDelegate>
+#include <QPixmap>
+#include <QPainter>
 
 Employe::Employe()
 {
@@ -149,20 +152,42 @@ bool Employe::supprimer(int id)
     return query.exec();
 }
 
+class ImageDelegate : public QStyledItemDelegate
+{
+public:
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override
+    {
+        if (index.column() == 4) // Assuming the image column is at index 4
+        {
+            QString imagePath = index.data(Qt::DisplayRole).toString(); // Assuming the image path is stored as a string in the database
+            QPixmap pixmap(imagePath);
+
+            if (!pixmap.isNull())
+            {
+                painter->drawPixmap(option.rect, pixmap);
+            }
+        }
+        else
+        {
+            QStyledItemDelegate::paint(painter, option, index);
+        }
+    }
+};
 
 QSqlQueryModel* Employe::afficher()
 {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT id, nom, prénom, poste FROM GESTION_EMPLOYÉ");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Id"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Prénom"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Poste"));
 
-    QSqlQueryModel* model=new QSqlQueryModel();
-    model->setQuery("SELECT id, nom, prénom,poste FROM GESTION_EMPLOYÉ");
-    model->setHeaderData(0,Qt::Horizontal,QObject::tr("Id"));
-    model->setHeaderData(1, Qt::Horizontal,QObject::tr("Nom"));
-    model->setHeaderData(2, Qt::Horizontal,QObject::tr("Prénom"));
-    model->setHeaderData(3, Qt::Horizontal,QObject::tr("Poste"));
     QTableView* tableView = new QTableView;
-                tableView->setModel(model);
+    tableView->setModel(model);
     QHeaderView* headerView = tableView->horizontalHeader();
     headerView->setSectionResizeMode(QHeaderView::Stretch);
+
     return model;
 }
 

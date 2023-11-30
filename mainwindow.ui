@@ -369,8 +369,8 @@ background-image : url(C:/Users/MSI/Downloads/ajouter employe (1).png);</string>
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>370</x>
-       <y>570</y>
+       <x>804</x>
+       <y>264</y>
        <width>181</width>
        <height>31</height>
       </rect>
@@ -401,8 +401,8 @@ background : none;</string>
     <widget class="QDateEdit" name="date">
      <property name="geometry">
       <rect>
-       <x>550</x>
-       <y>567</y>
+       <x>1000</x>
+       <y>260</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -425,7 +425,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>854</x>
-       <y>670</y>
+       <y>682</y>
        <width>141</width>
        <height>31</height>
       </rect>
@@ -457,7 +457,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>455</x>
-       <y>470</y>
+       <y>682</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -488,8 +488,8 @@ background : none;</string>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>920</x>
-       <y>270</y>
+       <x>916</x>
+       <y>405</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -520,8 +520,8 @@ background : none;</string>
     <widget class="QComboBox" name="sexe">
      <property name="geometry">
       <rect>
-       <x>550</x>
-       <y>667</y>
+       <x>1000</x>
+       <y>330</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -534,7 +534,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>819</x>
-       <y>570</y>
+       <y>613</y>
        <width>181</width>
        <height>31</height>
       </rect>
@@ -566,7 +566,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>440</x>
-       <y>270</y>
+       <y>522</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -598,7 +598,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>1000</x>
-       <y>567</y>
+       <y>610</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -665,7 +665,7 @@ QPushButton:hover
      <property name="geometry">
       <rect>
        <x>1000</x>
-       <y>267</y>
+       <y>400</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -684,7 +684,7 @@ QPushButton:hover
      <property name="geometry">
       <rect>
        <x>1000</x>
-       <y>667</y>
+       <y>680</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -707,7 +707,7 @@ QPushButton:hover
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>470</y>
+       <y>544</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -739,7 +739,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>550</x>
-       <y>467</y>
+       <y>680</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -752,7 +752,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>1000</x>
-       <y>367</y>
+       <y>470</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -771,7 +771,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>550</x>
-       <y>267</y>
+       <y>520</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -790,7 +790,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>820</x>
-       <y>370</y>
+       <y>474</y>
        <width>171</width>
        <height>31</height>
       </rect>
@@ -821,8 +821,8 @@ background : none;</string>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>484</x>
-       <y>370</y>
+       <x>470</x>
+       <y>601</y>
        <width>51</width>
        <height>31</height>
       </rect>
@@ -854,7 +854,7 @@ background : none;</string>
      <property name="geometry">
       <rect>
        <x>550</x>
-       <y>367</y>
+       <y>600</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -866,9 +866,9 @@ background : none;</string>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>480</x>
-       <y>670</y>
-       <width>71</width>
+       <x>920</x>
+       <y>334</y>
+       <width>61</width>
        <height>31</height>
       </rect>
      </property>
@@ -917,7 +917,7 @@ background-image : url(C:/Users/MSI/Downloads/return.png);
      <property name="geometry">
       <rect>
        <x>1000</x>
-       <y>467</y>
+       <y>540</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -929,26 +929,34 @@ background-image : url(C:/Users/MSI/Downloads/return.png);
     <widget class="QPushButton" name="pushButtonOpenImage">
      <property name="geometry">
       <rect>
-       <x>1150</x>
-       <y>240</y>
-       <width>93</width>
-       <height>28</height>
+       <x>530</x>
+       <y>450</y>
+       <width>151</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:none;</string>
+      <string notr="true">color: rgb(255, 255, 255);
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Inter;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 36px; 
+background : none;
+background:none;</string>
      </property>
      <property name="text">
-      <string>choose image</string>
+      <string>Choose Image</string>
      </property>
     </widget>
     <widget class="QLabel" name="image">
      <property name="geometry">
       <rect>
-       <x>1010</x>
-       <y>170</y>
-       <width>191</width>
-       <height>71</height>
+       <x>460</x>
+       <y>250</y>
+       <width>288</width>
+       <height>191</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -961,8 +969,8 @@ background-image : url(C:/Users/MSI/Downloads/return.png);
     <widget class="QLineEdit" name="line_image">
      <property name="geometry">
       <rect>
-       <x>1150</x>
-       <y>180</y>
+       <x>660</x>
+       <y>320</y>
        <width>113</width>
        <height>22</height>
       </rect>
@@ -1112,9 +1120,9 @@ background: none;</string>
     </widget>
    </widget>
    <zorder>chat</zorder>
-   <zorder>base</zorder>
    <zorder>tempss</zorder>
    <zorder>ajout</zorder>
+   <zorder>base</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
