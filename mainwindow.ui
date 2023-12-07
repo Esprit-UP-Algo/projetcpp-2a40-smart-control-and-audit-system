@@ -1118,10 +1118,46 @@ background: none;</string>
       <string/>
      </property>
     </widget>
+    <widget class="QTableView" name="tableView3">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>540</y>
+       <width>431</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelNoEmployees">
+     <property name="geometry">
+      <rect>
+       <x>620</x>
+       <y>540</y>
+       <width>381</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Inter;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 36px; 
+background : none;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
    <zorder>chat</zorder>
-   <zorder>tempss</zorder>
    <zorder>ajout</zorder>
+   <zorder>tempss</zorder>
    <zorder>base</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">

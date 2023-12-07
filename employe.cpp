@@ -191,6 +191,88 @@ QSqlQueryModel* Employe::afficher()
     return model;
 }
 
+QSqlQueryModel* Employe::afficher1()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT  nom, prénom, poste FROM GESTION_EMPLOYÉ WHERE poste IN ('Environnemental','Qualite')");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Prénom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Poste"));
+
+    QTableView* tableView = new QTableView;
+    tableView->setModel(model);
+    QHeaderView* headerView = tableView->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
+
+    return model;
+}
+
+QSqlQueryModel* Employe::afficher2()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT  nom, prénom, poste FROM GESTION_EMPLOYÉ WHERE poste IN ('Externe','Qualite')");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Prénom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Poste"));
+
+    QTableView* tableView = new QTableView;
+    tableView->setModel(model);
+    QHeaderView* headerView = tableView->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
+
+    return model;
+}
+
+QSqlQueryModel* Employe::afficher3()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT  nom, prénom, poste FROM GESTION_EMPLOYÉ WHERE poste IN ('Environnemental','Conformite','Externe')");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Prénom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Poste"));
+
+    QTableView* tableView = new QTableView;
+    tableView->setModel(model);
+    QHeaderView* headerView = tableView->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
+
+    return model;
+}
+
+QSqlQueryModel* Employe::afficher4()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT  nom, prénom, poste FROM GESTION_EMPLOYÉ WHERE poste IN ('Externe','Conformite')");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Prénom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Poste"));
+
+    QTableView* tableView = new QTableView;
+    tableView->setModel(model);
+    QHeaderView* headerView = tableView->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
+
+    return model;
+}
+
+QSqlQueryModel* Employe::afficher5()
+{
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT  nom, prénom, poste FROM GESTION_EMPLOYÉ WHERE poste IN ('Qualite','Conformite')");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Prénom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Poste"));
+
+    QTableView* tableView = new QTableView;
+    tableView->setModel(model);
+    QHeaderView* headerView = tableView->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
+
+    return model;
+}
+
+
+
 bool Employe::modifier(int nid)
 {
     QSqlQuery query;

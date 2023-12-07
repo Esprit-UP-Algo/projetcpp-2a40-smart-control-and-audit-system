@@ -35,7 +35,16 @@ public:
     bool ajouter();
     bool supprimer(int);
     QSqlQueryModel* afficher();
+    QSqlQueryModel* afficherc();
     bool modifier(int);
+    QSqlQueryModel* afficher1();
+    QSqlQueryModel* afficher2();
+    QSqlQueryModel* afficher3();
+    QSqlQueryModel* afficher4();
+    QSqlQueryModel* afficher5();
+
+
+
 
 private:
     QString nom,prenom,email,poste,sexe,numero_telephone,image ;

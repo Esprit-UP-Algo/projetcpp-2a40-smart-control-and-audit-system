@@ -246,6 +246,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+
 /*void MainWindow::openArduino() {
     // Specify the path to the Arduino executable
     QString arduinoPath = "C:/Arduino/arduino.exe";
@@ -821,9 +823,54 @@ void MainWindow::on_sendmsg_editingFinished()
                         afficherchat();
 }
 
-/*void MainWindow::on_calendarWidget_clicked(const QDate &date)
+void MainWindow::on_calendarWidget_clicked(const QDate &date)
 {
-    if(date.day()==8 )
-     {
-        }
-}*/
+    Employe e;
+    int dayofweek = date.dayOfWeek();
+
+    if (dayofweek == 1)
+    {
+        ui->tableView3->setModel(e.afficher1());
+        ui->tableView3->show();
+        ui->labelNoEmployees->hide(); // Hide the label when employees are present
+    }
+    else if (dayofweek == 2)
+    {
+        ui->tableView3->setModel(e.afficher2());
+        ui->tableView3->show();
+        ui->labelNoEmployees->hide();
+    }
+    else if (dayofweek == 3)
+    {
+        ui->tableView3->setModel(e.afficher3());
+        ui->tableView3->show();
+        ui->labelNoEmployees->hide();
+    }
+    else if (dayofweek == 4)
+    {
+        ui->tableView3->setModel(e.afficher4());
+        ui->tableView3->show();
+        ui->labelNoEmployees->hide();
+    }
+    else if (dayofweek == 5)
+    {
+        ui->tableView3->setModel(e.afficher5());
+        ui->tableView3->show();
+        ui->labelNoEmployees->hide();
+    }
+    else if (dayofweek == 6 || dayofweek == 7)
+    {
+        // Display the label and hide the table view
+        ui->labelNoEmployees->setText("No employees work on this day.");
+        ui->labelNoEmployees->show();
+        ui->tableView3->hide();
+    }
+    else
+    {
+        // Handle other days as needed
+        ui->tableView3->show();
+        ui->labelNoEmployees->hide();
+    }
+}
+
+
